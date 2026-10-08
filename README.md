@@ -39,9 +39,7 @@ ______________________________________________________________________
 
 ## Graylog Content Pack
 
-**File:** `configs/graylog/content-packs/content-pack-307cb4eb-93f5-4e77-9b2c-4d549052e48d-4.json` (revision 4)
-
-Imports the full Graylog configuration in one operation:
+Imports the full custom Graylog configuration in one operation with content pack file:
 
 - 1 Syslog UDP input (port 514)
 - 2 streams: `Syslog UDP - ALL`, `PAN-OS Logs`, plus `WatchGuard Logs`
