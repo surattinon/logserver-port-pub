@@ -1,0 +1,32 @@
+apiVersion: 1
+
+prune: true
+
+datasources:
+  - name: Graylog OpenSearch
+    uid: ds-graylog-opensearch
+    type: grafana-opensearch-datasource
+    access: proxy
+    url: http://opensearch:9200
+    isDefault: false
+    editable: false
+    jsonData:
+      flavor: opensearch
+      version: "2.19.5"
+      versionLabel: "OpenSearch 2.19.5"
+
+      # Index setting
+      database: "pan_os_logs_*,watchguard_logs_*"
+
+      # Time field
+      timeField: "timestamp"
+
+      # Logs
+      logMessageField: "_source"
+      logLevelField: ""
+
+      # OpenSearch options
+      serverless: false
+      maxConcurrentShardRequests: 5
+      timeInterval: "1m"
+      pplEnabled: true

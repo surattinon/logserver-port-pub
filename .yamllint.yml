@@ -1,0 +1,18 @@
+# yamllint config for tasco-logserver — intentionally lenient.
+# Goal: catch broken YAML (bad indentation, duplicate keys, tabs), NOT enforce
+# cosmetic style that would fail valid Grafana/Prometheus provisioning files.
+
+extends: default
+
+rules:
+  line-length: disable          # long URLs / dashboard JSON lines are fine
+  document-start: disable        # leading '---' is optional here
+  comments:
+    min-spaces-from-content: 1
+  braces:
+    max-spaces-inside: 1         # allow `{ key: val }` flow-mapping spacing
+  brackets:
+    max-spaces-inside: 1
+  truthy:
+    check-keys: false            # don't flag YAML keys like `on:` as booleans
+    allowed-values: ['true', 'false']

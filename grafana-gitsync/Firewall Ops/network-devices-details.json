@@ -1,0 +1,5588 @@
+{
+  "apiVersion": "dashboard.grafana.app/v2",
+  "kind": "Dashboard",
+  "metadata": {
+    "name": "network-devices-details"
+  },
+  "spec": {
+    "annotations": [
+      {
+        "kind": "AnnotationQuery",
+        "spec": {
+          "builtIn": true,
+          "enable": true,
+          "hide": true,
+          "iconColor": "rgba(0, 211, 255, 1)",
+          "name": "Annotations \u0026 Alerts",
+          "query": {
+            "datasource": {
+              "name": "-- Grafana --"
+            },
+            "group": "grafana",
+            "kind": "DataQuery",
+            "spec": {},
+            "version": "v0"
+          }
+        }
+      }
+    ],
+    "cursorSync": "Tooltip",
+    "description": "",
+    "editable": true,
+    "elements": {
+      "panel-1": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "",
+          "id": 1,
+          "links": [],
+          "title": "",
+          "transparent": true,
+          "vizConfig": {
+            "group": "text",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {},
+                "overrides": []
+              },
+              "options": {
+                "code": {
+                  "language": "plaintext",
+                  "showLineNumbers": false,
+                  "showMiniMap": false
+                },
+                "content": "- **Hostname:** `$hostname` | **Site:** `${site:text}` | **Device IP:** `$ipaddr`",
+                "mode": "markdown"
+              }
+            },
+            "version": "13.0.1+security-01"
+          }
+        }
+      },
+      "panel-10": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": true,
+                    "query": {
+                      "datasource": {
+                        "name": "ds-graylog-opensearch"
+                      },
+                      "group": "grafana-opensearch-datasource",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "alias": "Outbound",
+                        "bucketAggs": [
+                          {
+                            "field": "timestamp",
+                            "id": "2",
+                            "settings": {
+                              "interval": "10s"
+                            },
+                            "type": "date_histogram"
+                          }
+                        ],
+                        "format": "table",
+                        "luceneQueryType": "Metric",
+                        "metrics": [
+                          {
+                            "field": "bytes_sent",
+                            "id": "1",
+                            "type": "sum"
+                          }
+                        ],
+                        "query": "source: $hostname",
+                        "queryType": "lucene",
+                        "timeField": "timestamp"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                },
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "__expr__"
+                      },
+                      "group": "__expr__",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "expression": "$A/10",
+                        "type": "math"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "B"
+                  }
+                }
+              ],
+              "queryOptions": {
+                "hideTimeOverride": true,
+                "interval": "10s",
+                "timeFrom": "5m"
+              },
+              "transformations": []
+            }
+          },
+          "description": "",
+          "id": 10,
+          "links": [],
+          "title": "",
+          "transparent": true,
+          "vizConfig": {
+            "group": "stat",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "thresholds"
+                  },
+                  "displayName": "Outbound",
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "blue",
+                        "value": 0
+                      }
+                    ]
+                  },
+                  "unit": "Bps"
+                },
+                "overrides": []
+              },
+              "options": {
+                "colorMode": "value",
+                "graphMode": "none",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "percentChangeColorMode": "standard",
+                "reduceOptions": {
+                  "calcs": [
+                    "mean"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
+                "showPercentChange": false,
+                "textMode": "value_and_name",
+                "wideLayout": true
+              }
+            },
+            "version": "13.0.1+security-01"
+          }
+        }
+      },
+      "panel-11": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "ds-graylog-opensearch"
+                      },
+                      "group": "grafana-opensearch-datasource",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "alias": "",
+                        "bucketAggs": [
+                          {
+                            "field": "application",
+                            "id": "2",
+                            "settings": {
+                              "min_doc_count": "1",
+                              "order": "desc",
+                              "orderBy": "1",
+                              "size": "5"
+                            },
+                            "type": "terms"
+                          }
+                        ],
+                        "format": "table",
+                        "luceneQueryType": "Metric",
+                        "metrics": [
+                          {
+                            "field": "bytes",
+                            "id": "1",
+                            "settings": {},
+                            "type": "sum"
+                          }
+                        ],
+                        "query": "source: $hostname",
+                        "queryType": "lucene",
+                        "timeField": "timestamp"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "",
+          "id": 11,
+          "links": [],
+          "title": "Top Usage by Apps",
+          "vizConfig": {
+            "group": "piechart",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "fixedColor": "green",
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    }
+                  },
+                  "decimals": 2,
+                  "unit": "decbytes"
+                },
+                "overrides": []
+              },
+              "options": {
+                "displayLabels": [
+                  "percent"
+                ],
+                "legend": {
+                  "displayMode": "table",
+                  "placement": "bottom",
+                  "showLegend": true,
+                  "values": [
+                    "value"
+                  ]
+                },
+                "pieType": "donut",
+                "reduceOptions": {
+                  "calcs": [],
+                  "fields": "",
+                  "limit": 5,
+                  "values": true
+                },
+                "sort": "desc",
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "single",
+                  "sort": "none"
+                }
+              }
+            },
+            "version": "13.0.1+security-01"
+          }
+        }
+      },
+      "panel-12": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "ds-graylog-opensearch"
+                      },
+                      "group": "grafana-opensearch-datasource",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "alias": "",
+                        "bucketAggs": [
+                          {
+                            "field": "app_category",
+                            "id": "2",
+                            "settings": {
+                              "min_doc_count": "1",
+                              "order": "desc",
+                              "orderBy": "1",
+                              "size": "5"
+                            },
+                            "type": "terms"
+                          }
+                        ],
+                        "format": "table",
+                        "luceneQueryType": "Metric",
+                        "metrics": [
+                          {
+                            "field": "bytes",
+                            "id": "1",
+                            "type": "sum"
+                          }
+                        ],
+                        "query": "source: $hostname",
+                        "queryType": "lucene",
+                        "timeField": "timestamp"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "",
+          "id": 12,
+          "links": [],
+          "title": "Traffic by App Categories",
+          "vizConfig": {
+            "group": "piechart",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "fixedColor": "red",
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    }
+                  },
+                  "unit": "bytes"
+                },
+                "overrides": []
+              },
+              "options": {
+                "displayLabels": [
+                  "percent"
+                ],
+                "legend": {
+                  "displayMode": "table",
+                  "placement": "bottom",
+                  "showLegend": true,
+                  "values": [
+                    "value"
+                  ]
+                },
+                "pieType": "donut",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": true
+                },
+                "sort": "desc",
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "single",
+                  "sort": "none"
+                }
+              }
+            },
+            "version": "13.0.1+security-01"
+          }
+        }
+      },
+      "panel-13": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "ds-graylog-opensearch"
+                      },
+                      "group": "grafana-opensearch-datasource",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "alias": "",
+                        "bucketAggs": [
+                          {
+                            "field": "src_ip",
+                            "id": "2",
+                            "settings": {
+                              "min_doc_count": "1",
+                              "order": "desc",
+                              "orderBy": "4",
+                              "size": "15"
+                            },
+                            "type": "terms"
+                          }
+                        ],
+                        "format": "table",
+                        "luceneQueryType": "Metric",
+                        "metrics": [
+                          {
+                            "field": "bytes_sent",
+                            "id": "1",
+                            "type": "sum"
+                          },
+                          {
+                            "field": "bytes_received",
+                            "id": "3",
+                            "type": "sum"
+                          },
+                          {
+                            "field": "bytes",
+                            "id": "4",
+                            "type": "sum"
+                          }
+                        ],
+                        "query": "source: $hostname AND log_type:TRAFFIC",
+                        "queryType": "lucene",
+                        "timeField": "timestamp"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": [
+                {
+                  "group": "organize",
+                  "kind": "Transformation",
+                  "spec": {
+                    "options": {
+                      "excludeByName": {},
+                      "includeByName": {},
+                      "indexByName": {},
+                      "renameByName": {
+                        "Sum bytes": "Total",
+                        "Sum bytes_received": "Inbound",
+                        "Sum bytes_sent": "Outbound",
+                        "src_ip": "Source IP"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "description": "",
+          "id": 13,
+          "links": [],
+          "title": "Top usage by IP",
+          "transparent": true,
+          "vizConfig": {
+            "group": "table",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "thresholds"
+                  },
+                  "custom": {
+                    "align": "auto",
+                    "cellOptions": {
+                      "type": "auto"
+                    },
+                    "filterable": true,
+                    "footer": {
+                      "reducers": []
+                    },
+                    "inspect": false,
+                    "wrapText": true
+                  },
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      }
+                    ]
+                  }
+                },
+                "overrides": [
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Inbound",
+                      "scope": "series"
+                    },
+                    "properties": [
+                      {
+                        "id": "unit",
+                        "value": "decbytes"
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Total",
+                      "scope": "series"
+                    },
+                    "properties": [
+                      {
+                        "id": "unit",
+                        "value": "decbytes"
+                      },
+                      {
+                        "id": "custom.cellOptions",
+                        "value": {
+                          "applyToRow": true,
+                          "mode": "basic",
+                          "type": "color-background"
+                        }
+                      },
+                      {
+                        "id": "color",
+                        "value": {
+                          "mode": "continuous-cividis"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Outbound",
+                      "scope": "series"
+                    },
+                    "properties": [
+                      {
+                        "id": "unit",
+                        "value": "decbytes"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "options": {
+                "cellHeight": "sm",
+                "frozenColumns": {
+                  "left": 1
+                },
+                "showHeader": true,
+                "sortBy": []
+              }
+            },
+            "version": "13.0.1+security-01"
+          }
+        }
+      },
+      "panel-14": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "ds-graylog-opensearch"
+                      },
+                      "group": "grafana-opensearch-datasource",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "alias": "",
+                        "bucketAggs": [
+                          {
+                            "field": "timestamp",
+                            "id": "2",
+                            "settings": {
+                              "interval": "auto"
+                            },
+                            "type": "date_histogram"
+                          }
+                        ],
+                        "format": "table",
+                        "luceneQueryType": "Metric",
+                        "metrics": [
+                          {
+                            "id": "1",
+                            "type": "count"
+                          }
+                        ],
+                        "query": "source: $hostname AND (severity: critical OR log_type: ALARM)",
+                        "queryType": "lucene",
+                        "timeField": "timestamp"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {
+                "interval": "1m"
+              },
+              "transformations": []
+            }
+          },
+          "description": "",
+          "id": 14,
+          "links": [],
+          "title": "",
+          "vizConfig": {
+            "group": "stat",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "thresholds"
+                  },
+                  "decimals": 0,
+                  "displayName": "CRITICAL",
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      },
+                      {
+                        "color": "red",
+                        "value": 1
+                      }
+                    ]
+                  },
+                  "unit": "locale"
+                },
+                "overrides": []
+              },
+              "options": {
+                "colorMode": "background_solid",
+                "graphMode": "none",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "percentChangeColorMode": "standard",
+                "reduceOptions": {
+                  "calcs": [
+                    "sum"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
+                "showPercentChange": false,
+                "textMode": "value_and_name",
+                "wideLayout": true
+              }
+            },
+            "version": "13.0.1+security-01"
+          }
+        }
+      },
+      "panel-15": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "ds-graylog-opensearch"
+                      },
+                      "group": "grafana-opensearch-datasource",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "alias": "",
+                        "bucketAggs": [
+                          {
+                            "field": "timestamp",
+                            "id": "2",
+                            "settings": {
+                              "interval": "auto"
+                            },
+                            "type": "date_histogram"
+                          }
+                        ],
+                        "format": "table",
+                        "luceneQueryType": "Metric",
+                        "metrics": [
+                          {
+                            "id": "1",
+                            "type": "count"
+                          }
+                        ],
+                        "query": "source: $hostname AND (severity: high OR (log_type: EVENT AND log_level: ERROR))",
+                        "queryType": "lucene",
+                        "timeField": "timestamp"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "",
+          "id": 15,
+          "links": [],
+          "title": "",
+          "transparent": true,
+          "vizConfig": {
+            "group": "stat",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "thresholds"
+                  },
+                  "displayName": "HIGH",
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      },
+                      {
+                        "color": "orange",
+                        "value": 1
+                      }
+                    ]
+                  },
+                  "unit": "locale"
+                },
+                "overrides": []
+              },
+              "options": {
+                "colorMode": "background_solid",
+                "graphMode": "none",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "percentChangeColorMode": "standard",
+                "reduceOptions": {
+                  "calcs": [
+                    "sum"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
+                "showPercentChange": false,
+                "textMode": "value_and_name",
+                "wideLayout": true
+              }
+            },
+            "version": "13.0.1+security-01"
+          }
+        }
+      },
+      "panel-18": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": true,
+                    "query": {
+                      "datasource": {
+                        "name": "ds-graylog-opensearch"
+                      },
+                      "group": "grafana-opensearch-datasource",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "alias": "",
+                        "bucketAggs": [
+                          {
+                            "field": "timestamp",
+                            "id": "2",
+                            "settings": {
+                              "interval": "1d"
+                            },
+                            "type": "date_histogram"
+                          }
+                        ],
+                        "format": "table",
+                        "luceneQueryType": "Metric",
+                        "metrics": [
+                          {
+                            "id": "1",
+                            "type": "count"
+                          }
+                        ],
+                        "query": "source: $hostname",
+                        "queryType": "lucene",
+                        "timeField": "timestamp"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                },
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": true,
+                    "query": {
+                      "datasource": {
+                        "name": "ds-graylog-opensearch"
+                      },
+                      "group": "grafana-opensearch-datasource",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "alias": "",
+                        "bucketAggs": [
+                          {
+                            "field": "timestamp",
+                            "id": "2",
+                            "settings": {
+                              "interval": "1d"
+                            },
+                            "type": "date_histogram"
+                          }
+                        ],
+                        "format": "table",
+                        "luceneQueryType": "Metric",
+                        "metrics": [
+                          {
+                            "id": "1",
+                            "type": "count"
+                          }
+                        ],
+                        "query": "source: $hostname AND action:(deny OR drop)",
+                        "queryType": "lucene",
+                        "timeField": "timestamp"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "B"
+                  }
+                },
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "__expr__"
+                      },
+                      "group": "__expr__",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "expression": "$B/$A*100",
+                        "type": "math"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "C"
+                  }
+                }
+              ],
+              "queryOptions": {
+                "interval": "1d"
+              },
+              "transformations": []
+            }
+          },
+          "description": "",
+          "id": 18,
+          "links": [],
+          "title": "",
+          "transparent": true,
+          "vizConfig": {
+            "group": "stat",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "thresholds"
+                  },
+                  "decimals": 2,
+                  "displayName": "Denied rate %",
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      },
+                      {
+                        "color": "#EAB839",
+                        "value": 5
+                      },
+                      {
+                        "color": "red",
+                        "value": 15
+                      }
+                    ]
+                  },
+                  "unit": "percent"
+                },
+                "overrides": []
+              },
+              "options": {
+                "colorMode": "value",
+                "graphMode": "none",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "percentChangeColorMode": "standard",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
+                "showPercentChange": false,
+                "textMode": "auto",
+                "wideLayout": true
+              }
+            },
+            "version": "13.0.1+security-01"
+          }
+        }
+      },
+      "panel-19": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "ds-graylog-opensearch"
+                      },
+                      "group": "grafana-opensearch-datasource",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "alias": "",
+                        "bucketAggs": [
+                          {
+                            "field": "src_ip",
+                            "id": "2",
+                            "settings": {
+                              "min_doc_count": "1",
+                              "order": "desc",
+                              "orderBy": "1",
+                              "size": "10"
+                            },
+                            "type": "terms"
+                          }
+                        ],
+                        "format": "table",
+                        "luceneQueryType": "Metric",
+                        "metrics": [
+                          {
+                            "id": "1",
+                            "type": "count"
+                          }
+                        ],
+                        "query": "source: $hostname AND action: (deny OR drop)",
+                        "queryType": "lucene",
+                        "timeField": "timestamp"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "",
+          "id": 19,
+          "links": [],
+          "title": "Top Denied by Source",
+          "vizConfig": {
+            "group": "barchart",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "continuous-GrYlRd"
+                  },
+                  "custom": {
+                    "axisBorderShow": false,
+                    "axisCenteredZero": false,
+                    "axisColorMode": "text",
+                    "axisLabel": "",
+                    "axisPlacement": "right",
+                    "fillOpacity": 100,
+                    "gradientMode": "scheme",
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
+                    "lineWidth": 3,
+                    "scaleDistribution": {
+                      "type": "linear"
+                    },
+                    "thresholdsStyle": {
+                      "mode": "off"
+                    }
+                  },
+                  "displayName": "Deny Hits",
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      }
+                    ]
+                  },
+                  "unit": "Hits"
+                },
+                "overrides": [
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Deny Hits"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "red",
+                          "mode": "fixed"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              "options": {
+                "barRadius": 0.05,
+                "barWidth": 0.74,
+                "colorByField": "src_ip",
+                "fullHighlight": false,
+                "groupWidth": 0.7,
+                "legend": {
+                  "calcs": [],
+                  "displayMode": "list",
+                  "placement": "bottom",
+                  "showLegend": true
+                },
+                "orientation": "auto",
+                "showValue": "auto",
+                "stacking": "none",
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "single",
+                  "sort": "none"
+                },
+                "xTickLabelRotation": 90,
+                "xTickLabelSpacing": 0
+              }
+            },
+            "version": "13.0.1+security-01"
+          }
+        }
+      },
+      "panel-2": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "ds-graylog-opensearch"
+                      },
+                      "group": "grafana-opensearch-datasource",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "alias": "",
+                        "bucketAggs": [
+                          {
+                            "field": "timestamp",
+                            "id": "2",
+                            "settings": {
+                              "interval": "auto"
+                            },
+                            "type": "date_histogram"
+                          }
+                        ],
+                        "format": "table",
+                        "luceneQueryType": "Metric",
+                        "metrics": [
+                          {
+                            "id": "1",
+                            "type": "count"
+                          }
+                        ],
+                        "query": "source: $hostname",
+                        "queryType": "lucene",
+                        "timeField": "timestamp"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {
+                "interval": "5m"
+              },
+              "transformations": []
+            }
+          },
+          "description": "",
+          "id": 2,
+          "links": [],
+          "title": "Log rate overtime",
+          "vizConfig": {
+            "group": "timeseries",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "axisBorderShow": false,
+                    "axisCenteredZero": false,
+                    "axisColorMode": "text",
+                    "axisLabel": "",
+                    "axisPlacement": "auto",
+                    "barAlignment": 0,
+                    "barWidthFactor": 0.6,
+                    "drawStyle": "line",
+                    "fillOpacity": 25,
+                    "gradientMode": "none",
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
+                    "insertNulls": false,
+                    "lineInterpolation": "smooth",
+                    "lineWidth": 1,
+                    "pointSize": 5,
+                    "scaleDistribution": {
+                      "type": "linear"
+                    },
+                    "showPoints": "auto",
+                    "showValues": false,
+                    "spanNulls": false,
+                    "stacking": {
+                      "group": "A",
+                      "mode": "none"
+                    },
+                    "thresholdsStyle": {
+                      "mode": "off"
+                    }
+                  },
+                  "displayName": "Messages",
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      },
+                      {
+                        "color": "red",
+                        "value": 0
+                      }
+                    ]
+                  },
+                  "unit": "locale"
+                },
+                "overrides": []
+              },
+              "options": {
+                "annotations": {
+                  "clustering": -1,
+                  "multiLane": false
+                },
+                "legend": {
+                  "calcs": [],
+                  "displayMode": "list",
+                  "placement": "bottom",
+                  "showLegend": true
+                },
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "single",
+                  "sort": "none"
+                }
+              }
+            },
+            "version": "13.0.1+security-01"
+          }
+        }
+      },
+      "panel-20": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "ds-graylog-opensearch"
+                      },
+                      "group": "grafana-opensearch-datasource",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "alias": "",
+                        "bucketAggs": [
+                          {
+                            "field": "dst_ip",
+                            "id": "2",
+                            "settings": {
+                              "min_doc_count": "1",
+                              "order": "desc",
+                              "orderBy": "1",
+                              "size": "10"
+                            },
+                            "type": "terms"
+                          }
+                        ],
+                        "format": "table",
+                        "luceneQueryType": "Metric",
+                        "metrics": [
+                          {
+                            "id": "1",
+                            "type": "count"
+                          }
+                        ],
+                        "query": "source: $hostname AND action: (deny OR drop)",
+                        "queryType": "lucene",
+                        "timeField": "timestamp"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "",
+          "id": 20,
+          "links": [],
+          "title": "Top Denied by Destination",
+          "vizConfig": {
+            "group": "barchart",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "continuous-GrYlRd"
+                  },
+                  "custom": {
+                    "axisBorderShow": false,
+                    "axisCenteredZero": false,
+                    "axisColorMode": "text",
+                    "axisLabel": "",
+                    "axisPlacement": "right",
+                    "fillOpacity": 100,
+                    "gradientMode": "scheme",
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
+                    "lineWidth": 3,
+                    "scaleDistribution": {
+                      "type": "linear"
+                    },
+                    "thresholdsStyle": {
+                      "mode": "off"
+                    }
+                  },
+                  "displayName": "Deny Hits",
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      }
+                    ]
+                  },
+                  "unit": "Hits"
+                },
+                "overrides": [
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Deny Hits"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "red",
+                          "mode": "fixed"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              "options": {
+                "barRadius": 0.05,
+                "barWidth": 0.74,
+                "colorByField": "src_ip",
+                "fullHighlight": false,
+                "groupWidth": 0.7,
+                "legend": {
+                  "calcs": [],
+                  "displayMode": "list",
+                  "placement": "bottom",
+                  "showLegend": true
+                },
+                "orientation": "auto",
+                "showValue": "auto",
+                "stacking": "none",
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "single",
+                  "sort": "none"
+                },
+                "xTickLabelRotation": 90,
+                "xTickLabelSpacing": 0
+              }
+            },
+            "version": "13.0.1+security-01"
+          }
+        }
+      },
+      "panel-21": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "ds-graylog-opensearch"
+                      },
+                      "group": "grafana-opensearch-datasource",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "alias": "",
+                        "bucketAggs": [
+                          {
+                            "field": "timestamp",
+                            "id": "2",
+                            "settings": {
+                              "interval": "auto"
+                            },
+                            "type": "date_histogram"
+                          }
+                        ],
+                        "format": "table",
+                        "luceneQueryType": "Logs",
+                        "metrics": [
+                          {
+                            "id": "1",
+                            "type": "logs"
+                          }
+                        ],
+                        "query": "source: $hostname AND (severity: high OR (log_type: EVENT AND log_level: ERROR) OR (severity: critical OR log_type: ALARM))",
+                        "queryType": "lucene",
+                        "timeField": "timestamp"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": [
+                {
+                  "group": "organize",
+                  "kind": "Transformation",
+                  "spec": {
+                    "options": {
+                      "excludeByName": {
+                        "_id": true,
+                        "_index": true,
+                        "_source": true,
+                        "_type": true,
+                        "actionflags": true,
+                        "app_category": true,
+                        "app_characteristic": true,
+                        "app_is_saas": true,
+                        "app_risk": true,
+                        "app_sanctioned": true,
+                        "app_subcategory": true,
+                        "app_technology": true,
+                        "bytes": true,
+                        "bytes_received": true,
+                        "bytes_sent": true,
+                        "category": true,
+                        "cluster_name": true,
+                        "content_version": true,
+                        "device_alias": true,
+                        "device_name": true,
+                        "device_vendor": true,
+                        "direction": true,
+                        "dst_country": true,
+                        "dst_zone": true,
+                        "elapsed_time": true,
+                        "event_source_product": true,
+                        "facility": true,
+                        "facility_num": true,
+                        "flags": true,
+                        "generated_time": false,
+                        "gl2_accounted_message_size": true,
+                        "gl2_input_message_size": true,
+                        "gl2_message_id": true,
+                        "gl2_processing_duration_ms": true,
+                        "gl2_processing_timestamp": true,
+                        "gl2_receive_timestamp": true,
+                        "gl2_remote_ip": true,
+                        "gl2_remote_port": true,
+                        "gl2_source_input": true,
+                        "gl2_source_node": true,
+                        "high_res_timestamp": true,
+                        "inbound_if": true,
+                        "level": true,
+                        "log_profile": true,
+                        "log_type": true,
+                        "message": false,
+                        "nat_dst_ip": true,
+                        "nat_dst_port": true,
+                        "nat_src_ip": true,
+                        "nat_src_port": true,
+                        "offloaded": true,
+                        "outbound_if": true,
+                        "pa_action": true,
+                        "pa_action_flags": true,
+                        "pa_app_category": true,
+                        "pa_app_characteristic": true,
+                        "pa_app_container": true,
+                        "pa_app_is_saas": true,
+                        "pa_app_risk": true,
+                        "pa_app_sanctioned": true,
+                        "pa_app_subcategory": true,
+                        "pa_app_technology": true,
+                        "pa_category": true,
+                        "pa_cluster_name": true,
+                        "pa_content_version": true,
+                        "pa_device_name": true,
+                        "pa_direction": true,
+                        "pa_dst_country": true,
+                        "pa_dst_zone": true,
+                        "pa_flags": true,
+                        "pa_generate_time": true,
+                        "pa_high_res_timestamp": true,
+                        "pa_inbound_if": true,
+                        "pa_log_profile": true,
+                        "pa_log_subtype": true,
+                        "pa_nat_dst_ip": true,
+                        "pa_nat_dst_port": true,
+                        "pa_nat_src_ip": true,
+                        "pa_nat_src_port": true,
+                        "pa_outbound_if": true,
+                        "pa_pcap_id": true,
+                        "pa_protocol": true,
+                        "pa_receive_time": true,
+                        "pa_repeat_count": true,
+                        "pa_report_id": true,
+                        "pa_rule_name": true,
+                        "pa_rule_uuid": true,
+                        "pa_seq_num": true,
+                        "pa_serial": true,
+                        "pa_session_id": true,
+                        "pa_src_country": true,
+                        "pa_src_port": true,
+                        "pa_src_zone": true,
+                        "pa_threat_id": true,
+                        "pa_tunneled_app": true,
+                        "pa_url_idx": true,
+                        "pa_vsys": true,
+                        "packets": true,
+                        "pcap_id": true,
+                        "pkts_received": true,
+                        "pkts_sent": true,
+                        "receive_time": true,
+                        "repeat_count": true,
+                        "report_id": true,
+                        "rule_name": true,
+                        "rule_uuid": true,
+                        "seqno": true,
+                        "serial_number": true,
+                        "session_id": true,
+                        "severity": true,
+                        "site": true,
+                        "source": true,
+                        "src_country": true,
+                        "src_port": true,
+                        "src_zone": true,
+                        "streams": true,
+                        "subtype": true,
+                        "threat_category": false,
+                        "threat_id": true,
+                        "timestamp": true,
+                        "tunneled_app": true,
+                        "type": true,
+                        "url_filename": true,
+                        "url_idx": true,
+                        "vendor_subtype": true,
+                        "vsys": true
+                      },
+                      "includeByName": {},
+                      "indexByName": {
+                        "_id": 13,
+                        "_index": 14,
+                        "_source": 15,
+                        "_type": 16,
+                        "action": 5,
+                        "actionflags": 30,
+                        "app_category": 31,
+                        "app_characteristic": 32,
+                        "app_is_saas": 33,
+                        "app_risk": 34,
+                        "app_sanctioned": 35,
+                        "app_subcategory": 36,
+                        "app_technology": 37,
+                        "application": 10,
+                        "bytes": 38,
+                        "bytes_received": 39,
+                        "bytes_sent": 40,
+                        "category": 41,
+                        "cluster_name": 42,
+                        "content_version": 43,
+                        "device_alias": 44,
+                        "device_name": 45,
+                        "device_vendor": 46,
+                        "direction": 47,
+                        "dst_country": 48,
+                        "dst_ip": 8,
+                        "dst_port": 9,
+                        "dst_zone": 49,
+                        "elapsed_time": 50,
+                        "facility": 51,
+                        "facility_num": 52,
+                        "flags": 53,
+                        "generated_time": 1,
+                        "gl2_accounted_message_size": 17,
+                        "gl2_input_message_size": 18,
+                        "gl2_message_id": 19,
+                        "gl2_processing_duration_ms": 20,
+                        "gl2_processing_timestamp": 21,
+                        "gl2_receive_timestamp": 22,
+                        "gl2_remote_ip": 23,
+                        "gl2_remote_port": 24,
+                        "gl2_source_input": 25,
+                        "gl2_source_node": 26,
+                        "high_res_timestamp": 0,
+                        "inbound_if": 54,
+                        "level": 4,
+                        "log_profile": 55,
+                        "log_type": 56,
+                        "message": 27,
+                        "nat_dst_ip": 57,
+                        "nat_dst_port": 58,
+                        "nat_src_ip": 59,
+                        "nat_src_port": 60,
+                        "offloaded": 61,
+                        "outbound_if": 62,
+                        "packets": 63,
+                        "pcap_id": 64,
+                        "pkts_received": 65,
+                        "pkts_sent": 66,
+                        "protocol": 11,
+                        "receive_time": 67,
+                        "repeat_count": 12,
+                        "report_id": 68,
+                        "rule_name": 69,
+                        "rule_uuid": 70,
+                        "seqno": 71,
+                        "serial_number": 72,
+                        "session_id": 73,
+                        "severity": 3,
+                        "site": 74,
+                        "source": 28,
+                        "src_country": 75,
+                        "src_ip": 7,
+                        "src_port": 76,
+                        "src_zone": 77,
+                        "streams": 29,
+                        "subtype": 78,
+                        "threat_category": 6,
+                        "threat_id": 79,
+                        "timestamp": 2,
+                        "tunneled_app": 80,
+                        "type": 81,
+                        "url_filename": 82,
+                        "url_idx": 83,
+                        "vsys": 84
+                      },
+                      "renameByName": {
+                        "_id": "",
+                        "action": "Action",
+                        "application": "App",
+                        "dst_ip": "Dest",
+                        "dst_port": "Port",
+                        "generated_time": "Generated Time",
+                        "level": "Level",
+                        "pa_application": "Application",
+                        "pa_dst_ip": "Destination",
+                        "pa_dst_port": "Port",
+                        "pa_severity": "Severity",
+                        "pa_src_ip": "Source",
+                        "pa_threat_category": "Category",
+                        "protocol": "Protocol",
+                        "repeat_count": "Repeat Count",
+                        "severity": "Severity",
+                        "src_ip": "Source",
+                        "timestamp": ""
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "description": "",
+          "id": 21,
+          "links": [],
+          "title": "Recent Severity Events",
+          "vizConfig": {
+            "group": "table",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "thresholds"
+                  },
+                  "custom": {
+                    "align": "auto",
+                    "cellOptions": {
+                      "mode": "basic",
+                      "type": "color-background"
+                    },
+                    "filterable": true,
+                    "footer": {
+                      "reducers": []
+                    },
+                    "inspect": false
+                  },
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "red",
+                        "value": 0
+                      }
+                    ]
+                  }
+                },
+                "overrides": [
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Port"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 60
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Source"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 111
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Action",
+                      "scope": "series"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 102
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Dest",
+                      "scope": "series"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 114
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Source",
+                      "scope": "series"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 135
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Level",
+                      "scope": "series"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 74
+                      },
+                      {
+                        "id": "mappings",
+                        "value": [
+                          {
+                            "options": {
+                              "3": {
+                                "color": "red",
+                                "index": 0,
+                                "text": "Critical"
+                              },
+                              "4": {
+                                "color": "orange",
+                                "index": 1,
+                                "text": "High"
+                              }
+                            },
+                            "type": "value"
+                          }
+                        ]
+                      },
+                      {
+                        "id": "custom.cellOptions",
+                        "value": {
+                          "applyToRow": true,
+                          "mode": "basic",
+                          "type": "color-background"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Protocol",
+                      "scope": "series"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 95
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "App",
+                      "scope": "series"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 125
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Repeat Count",
+                      "scope": "series"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 125
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Timestamp"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 176
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "message"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 453
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "threat_category"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 154
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "high_res_timestamp"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 245
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Generated Time"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 167
+                      }
+                    ]
+                  }
+                ]
+              },
+              "options": {
+                "cellHeight": "sm",
+                "showHeader": true,
+                "sortBy": []
+              }
+            },
+            "version": "13.0.1+security-01"
+          }
+        }
+      },
+      "panel-22": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "ds-graylog-opensearch"
+                      },
+                      "group": "grafana-opensearch-datasource",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "alias": "",
+                        "bucketAggs": [
+                          {
+                            "field": "timestamp",
+                            "id": "2",
+                            "settings": {
+                              "interval": "auto"
+                            },
+                            "type": "date_histogram"
+                          }
+                        ],
+                        "format": "table",
+                        "luceneQueryType": "RawData",
+                        "metrics": [
+                          {
+                            "id": "1",
+                            "settings": {
+                              "order": "desc",
+                              "size": "10000",
+                              "useTimeRange": true
+                            },
+                            "type": "raw_data"
+                          }
+                        ],
+                        "query": "source: $hostname AND action:(deny OR drop)",
+                        "queryType": "lucene",
+                        "timeField": "timestamp"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": [
+                {
+                  "group": "organize",
+                  "kind": "Transformation",
+                  "spec": {
+                    "options": {
+                      "excludeByName": {
+                        "_id": true,
+                        "_index": true,
+                        "_source": true,
+                        "_type": true,
+                        "action_source": true,
+                        "actionflags": true,
+                        "app_behavior": true,
+                        "app_cat": true,
+                        "app_category": true,
+                        "app_characteristic": true,
+                        "app_is_saas": true,
+                        "app_risk": true,
+                        "app_sanctioned": true,
+                        "app_subcategory": true,
+                        "app_technology": true,
+                        "botnet": true,
+                        "bytes": true,
+                        "bytes_received": true,
+                        "bytes_sent": true,
+                        "category": true,
+                        "cluster_name": true,
+                        "content_version": true,
+                        "device_alias": true,
+                        "device_name": true,
+                        "device_product": true,
+                        "device_vendor": true,
+                        "direction": true,
+                        "dstPostNAT": true,
+                        "dstPostNATPORT": true,
+                        "dst_country": true,
+                        "dst_zone": false,
+                        "elapsed_time": true,
+                        "event_source_product": true,
+                        "facility": true,
+                        "facility_num": true,
+                        "flags": true,
+                        "flow_type": true,
+                        "generated_time": true,
+                        "geo": true,
+                        "gl2_accounted_message_size": true,
+                        "gl2_input_message_size": true,
+                        "gl2_message_id": true,
+                        "gl2_processing_duration_ms": true,
+                        "gl2_processing_timestamp": true,
+                        "gl2_receive_timestamp": true,
+                        "gl2_remote_ip": true,
+                        "gl2_remote_port": true,
+                        "gl2_source_input": true,
+                        "gl2_source_node": true,
+                        "high_res_timestamp": true,
+                        "icmpType": true,
+                        "inbound_if": true,
+                        "ip_TTL": true,
+                        "ip_len": true,
+                        "level": true,
+                        "log_category": true,
+                        "log_level": true,
+                        "log_profile": true,
+                        "log_type": true,
+                        "message": true,
+                        "msg": true,
+                        "nat_dst_ip": true,
+                        "nat_dst_port": true,
+                        "nat_src_ip": true,
+                        "nat_src_port": true,
+                        "offloaded": true,
+                        "outbound_if": true,
+                        "pa_action": true,
+                        "pa_action_flags": true,
+                        "pa_app_category": true,
+                        "pa_app_characteristic": true,
+                        "pa_app_container": true,
+                        "pa_app_is_saas": true,
+                        "pa_app_risk": true,
+                        "pa_app_sanctioned": true,
+                        "pa_app_subcategory": true,
+                        "pa_app_technology": true,
+                        "pa_category": true,
+                        "pa_cluster_name": true,
+                        "pa_content_version": true,
+                        "pa_device_name": true,
+                        "pa_direction": true,
+                        "pa_dst_country": true,
+                        "pa_dst_zone": true,
+                        "pa_flags": true,
+                        "pa_generate_time": true,
+                        "pa_high_res_timestamp": true,
+                        "pa_inbound_if": true,
+                        "pa_log_profile": true,
+                        "pa_log_subtype": true,
+                        "pa_nat_dst_ip": true,
+                        "pa_nat_dst_port": true,
+                        "pa_nat_src_ip": true,
+                        "pa_nat_src_port": true,
+                        "pa_outbound_if": true,
+                        "pa_pcap_id": true,
+                        "pa_protocol": true,
+                        "pa_receive_time": true,
+                        "pa_repeat_count": true,
+                        "pa_report_id": true,
+                        "pa_rule_name": true,
+                        "pa_rule_uuid": true,
+                        "pa_seq_num": true,
+                        "pa_serial": true,
+                        "pa_session_id": true,
+                        "pa_src_country": true,
+                        "pa_src_port": true,
+                        "pa_src_zone": true,
+                        "pa_threat_id": true,
+                        "pa_tunneled_app": true,
+                        "pa_url_idx": true,
+                        "pa_vsys": true,
+                        "packets": true,
+                        "pcap_id": true,
+                        "pkts_received": true,
+                        "pkts_sent": true,
+                        "proxy_act": true,
+                        "rcvd_pkts": true,
+                        "receive_time": true,
+                        "repeat_count": true,
+                        "report_id": true,
+                        "route_type": true,
+                        "rule_name": false,
+                        "rule_uuid": true,
+                        "sent_pkts": true,
+                        "seqno": true,
+                        "serial": true,
+                        "serial_number": true,
+                        "session_end_reason": true,
+                        "session_id": true,
+                        "severity": true,
+                        "site": true,
+                        "source": true,
+                        "src_country": true,
+                        "src_port": false,
+                        "src_user": true,
+                        "src_zone": false,
+                        "start_time": true,
+                        "streams": true,
+                        "subtype": true,
+                        "tcp_flag": true,
+                        "tcp_offset": true,
+                        "tcp_seq": true,
+                        "tcp_window": true,
+                        "threat_category": true,
+                        "threat_id": true,
+                        "tunneled_app": true,
+                        "type": true,
+                        "url_filename": true,
+                        "url_idx": true,
+                        "vendor_subtype": true,
+                        "vsys": true,
+                        "wg_event_id": true,
+                        "wg_event_prefix": true,
+                        "wg_fw_version": true
+                      },
+                      "includeByName": {},
+                      "indexByName": {
+                        "_id": 11,
+                        "_index": 12,
+                        "_source": 13,
+                        "_type": 14,
+                        "action": 2,
+                        "bytes": 28,
+                        "bytes_received": 29,
+                        "bytes_sent": 30,
+                        "device_alias": 31,
+                        "device_product": 43,
+                        "device_vendor": 32,
+                        "dstPostNAT": 44,
+                        "dstPostNATPORT": 45,
+                        "dst_country": 33,
+                        "dst_ip": 5,
+                        "dst_port": 7,
+                        "dst_zone": 10,
+                        "elapsed_time": 34,
+                        "facility": 35,
+                        "facility_num": 36,
+                        "flags": 37,
+                        "geo": 63,
+                        "gl2_accounted_message_size": 15,
+                        "gl2_input_message_size": 16,
+                        "gl2_message_id": 17,
+                        "gl2_processing_duration_ms": 18,
+                        "gl2_processing_timestamp": 19,
+                        "gl2_receive_timestamp": 20,
+                        "gl2_remote_ip": 21,
+                        "gl2_remote_port": 22,
+                        "gl2_source_input": 23,
+                        "gl2_source_node": 24,
+                        "icmpType": 46,
+                        "ip_TTL": 47,
+                        "ip_len": 48,
+                        "level": 1,
+                        "log_category": 49,
+                        "log_level": 50,
+                        "log_type": 38,
+                        "message": 25,
+                        "msg": 51,
+                        "pkts_received": 39,
+                        "pkts_sent": 40,
+                        "protocol": 8,
+                        "rcvd_pkts": 52,
+                        "route_type": 53,
+                        "rule_name": 3,
+                        "sent_pkts": 54,
+                        "serial": 55,
+                        "site": 41,
+                        "source": 26,
+                        "src_country": 42,
+                        "src_ip": 4,
+                        "src_port": 6,
+                        "src_zone": 9,
+                        "streams": 27,
+                        "tcp_flag": 56,
+                        "tcp_offset": 57,
+                        "tcp_seq": 58,
+                        "tcp_window": 59,
+                        "timestamp": 0,
+                        "wg_event_id": 60,
+                        "wg_event_prefix": 61,
+                        "wg_fw_version": 62
+                      },
+                      "renameByName": {
+                        "_id": "",
+                        "action": "Action",
+                        "application": "App",
+                        "dst_ip": "Dest",
+                        "dst_port": "Dst Port",
+                        "level": "Level",
+                        "pa_application": "Application",
+                        "pa_dst_ip": "Destination",
+                        "pa_dst_port": "Port",
+                        "pa_severity": "Severity",
+                        "pa_src_ip": "Source",
+                        "pa_threat_category": "Category",
+                        "protocol": "Protocol",
+                        "repeat_count": "Repeat Count",
+                        "rule_name": "Policy",
+                        "src_ip": "Source",
+                        "src_port": "Src Port",
+                        "timestamp": "Timestamp"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "description": "",
+          "id": 22,
+          "links": [],
+          "title": "Recent Deny/Drop Events",
+          "vizConfig": {
+            "group": "table",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "thresholds"
+                  },
+                  "custom": {
+                    "align": "auto",
+                    "cellOptions": {
+                      "type": "auto"
+                    },
+                    "filterable": true,
+                    "footer": {
+                      "reducers": []
+                    },
+                    "inspect": false
+                  },
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      }
+                    ]
+                  }
+                },
+                "overrides": [
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Port"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 75
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Source"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 138
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Action",
+                      "scope": "series"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 102
+                      },
+                      {
+                        "id": "custom.cellOptions",
+                        "value": {
+                          "mode": "basic",
+                          "type": "color-background"
+                        }
+                      },
+                      {
+                        "id": "mappings",
+                        "value": [
+                          {
+                            "options": {
+                              "deny": {
+                                "color": "red",
+                                "index": 1
+                              },
+                              "drop": {
+                                "color": "red",
+                                "index": 0
+                              }
+                            },
+                            "type": "value"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Dest",
+                      "scope": "series"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 127
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Source",
+                      "scope": "series"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 135
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Protocol",
+                      "scope": "series"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 95
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "App",
+                      "scope": "series"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 113
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Repeat Count",
+                      "scope": "series"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 204
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Timestamp"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 190
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "src_zone"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 141
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Policy"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 227
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Src Port"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 104
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Dst Port"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 99
+                      }
+                    ]
+                  }
+                ]
+              },
+              "options": {
+                "cellHeight": "sm",
+                "showHeader": true,
+                "sortBy": []
+              }
+            },
+            "version": "13.0.1+security-01"
+          }
+        }
+      },
+      "panel-23": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "ds-graylog-opensearch"
+                      },
+                      "group": "grafana-opensearch-datasource",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "alias": "Deny/Drop",
+                        "bucketAggs": [
+                          {
+                            "field": "timestamp",
+                            "id": "2",
+                            "settings": {
+                              "interval": "1m"
+                            },
+                            "type": "date_histogram"
+                          }
+                        ],
+                        "format": "table",
+                        "luceneQueryType": "Metric",
+                        "metrics": [
+                          {
+                            "id": "1",
+                            "type": "count"
+                          }
+                        ],
+                        "query": "source: $hostname AND action:(deny OR drop)",
+                        "queryType": "lucene",
+                        "timeField": "timestamp"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "B"
+                  }
+                }
+              ],
+              "queryOptions": {
+                "interval": "1m"
+              },
+              "transformations": []
+            }
+          },
+          "description": "Each block represents denied hits / min ",
+          "id": 23,
+          "links": [],
+          "title": "Denied Rate Timeline",
+          "transparent": true,
+          "vizConfig": {
+            "group": "heatmap",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "custom": {
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
+                    "scaleDistribution": {
+                      "type": "linear"
+                    }
+                  }
+                },
+                "overrides": []
+              },
+              "options": {
+                "annotations": {
+                  "clustering": -1,
+                  "multiLane": false
+                },
+                "calculate": false,
+                "cellGap": 0,
+                "cellValues": {
+                  "unit": ""
+                },
+                "color": {
+                  "exponent": 0.5,
+                  "fill": "dark-orange",
+                  "max": 3000,
+                  "min": 0,
+                  "mode": "scheme",
+                  "reverse": true,
+                  "scale": "exponential",
+                  "scheme": "Reds",
+                  "steps": 30
+                },
+                "exemplars": {
+                  "color": "rgba(255,0,255,0.7)"
+                },
+                "filterValues": {
+                  "le": 1e-9
+                },
+                "legend": {
+                  "show": false
+                },
+                "rowsFrame": {
+                  "layout": "auto"
+                },
+                "tooltip": {
+                  "mode": "single",
+                  "showColorScale": false,
+                  "yHistogram": false
+                },
+                "yAxis": {
+                  "axisPlacement": "hidden",
+                  "reverse": false
+                }
+              }
+            },
+            "version": "13.0.1+security-01"
+          }
+        }
+      },
+      "panel-24": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "ds-graylog-opensearch"
+                      },
+                      "group": "grafana-opensearch-datasource",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "alias": "",
+                        "bucketAggs": [
+                          {
+                            "field": "timestamp",
+                            "id": "2",
+                            "settings": {
+                              "interval": "auto"
+                            },
+                            "type": "date_histogram"
+                          }
+                        ],
+                        "format": "table",
+                        "luceneQueryType": "Logs",
+                        "metrics": [
+                          {
+                            "id": "1",
+                            "type": "logs"
+                          }
+                        ],
+                        "query": "source: $hostname",
+                        "queryType": "lucene",
+                        "timeField": "timestamp"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": [
+                {
+                  "group": "organize",
+                  "kind": "Transformation",
+                  "spec": {
+                    "options": {
+                      "excludeByName": {
+                        "_id": true,
+                        "_index": true,
+                        "_source": true,
+                        "_type": true,
+                        "action_source": true,
+                        "actionflags": true,
+                        "app_category": true,
+                        "app_characteristic": true,
+                        "app_container": true,
+                        "app_is_saas": true,
+                        "app_risk": true,
+                        "app_sanctioned": true,
+                        "app_subcategory": true,
+                        "app_technology": true,
+                        "bytes": true,
+                        "bytes_received": true,
+                        "bytes_sent": true,
+                        "category": true,
+                        "cluster_name": true,
+                        "content_version": true,
+                        "device_alias": true,
+                        "device_name": true,
+                        "device_vendor": true,
+                        "direction": true,
+                        "dst_country": true,
+                        "dst_user": true,
+                        "dst_zone": true,
+                        "elapsed_time": true,
+                        "event_source_product": true,
+                        "facility": true,
+                        "facility_num": true,
+                        "flags": true,
+                        "flow_type": true,
+                        "generated_time": true,
+                        "gl2_accounted_message_size": true,
+                        "gl2_input_message_size": true,
+                        "gl2_message_id": true,
+                        "gl2_processing_duration_ms": true,
+                        "gl2_processing_timestamp": true,
+                        "gl2_receive_timestamp": true,
+                        "gl2_remote_ip": true,
+                        "gl2_remote_port": true,
+                        "gl2_source_input": true,
+                        "gl2_source_node": true,
+                        "high_res_timestamp": true,
+                        "inbound_if": true,
+                        "level": true,
+                        "log_profile": true,
+                        "log_type": true,
+                        "message": false,
+                        "nat_dst_ip": true,
+                        "nat_dst_port": true,
+                        "nat_src_ip": true,
+                        "nat_src_port": true,
+                        "offloaded": true,
+                        "outbound_if": true,
+                        "pa_action": true,
+                        "pa_action_flags": true,
+                        "pa_app_category": true,
+                        "pa_app_characteristic": true,
+                        "pa_app_container": true,
+                        "pa_app_is_saas": true,
+                        "pa_app_risk": true,
+                        "pa_app_sanctioned": true,
+                        "pa_app_subcategory": true,
+                        "pa_app_technology": true,
+                        "pa_category": true,
+                        "pa_cluster_name": true,
+                        "pa_content_version": true,
+                        "pa_device_name": true,
+                        "pa_direction": true,
+                        "pa_dst_country": true,
+                        "pa_dst_zone": true,
+                        "pa_flags": true,
+                        "pa_generate_time": true,
+                        "pa_high_res_timestamp": true,
+                        "pa_inbound_if": true,
+                        "pa_log_profile": true,
+                        "pa_log_subtype": true,
+                        "pa_nat_dst_ip": true,
+                        "pa_nat_dst_port": true,
+                        "pa_nat_src_ip": true,
+                        "pa_nat_src_port": true,
+                        "pa_outbound_if": true,
+                        "pa_pcap_id": true,
+                        "pa_protocol": true,
+                        "pa_receive_time": true,
+                        "pa_repeat_count": true,
+                        "pa_report_id": true,
+                        "pa_rule_name": true,
+                        "pa_rule_uuid": true,
+                        "pa_seq_num": true,
+                        "pa_serial": true,
+                        "pa_session_id": true,
+                        "pa_src_country": true,
+                        "pa_src_port": true,
+                        "pa_src_zone": true,
+                        "pa_threat_id": true,
+                        "pa_tunneled_app": true,
+                        "pa_url_idx": true,
+                        "pa_vsys": true,
+                        "packets": true,
+                        "pcap_id": true,
+                        "pkts_received": true,
+                        "pkts_sent": true,
+                        "receive_time": true,
+                        "repeat_count": true,
+                        "report_id": true,
+                        "rule_name": true,
+                        "rule_uuid": true,
+                        "seqno": true,
+                        "serial_number": true,
+                        "session_end_reason": true,
+                        "session_id": true,
+                        "severity": true,
+                        "site": true,
+                        "source": true,
+                        "src_country": true,
+                        "src_port": true,
+                        "src_user": true,
+                        "src_zone": true,
+                        "start_time": true,
+                        "streams": true,
+                        "subtype": true,
+                        "threat_category": true,
+                        "threat_id": true,
+                        "tunneled_app": true,
+                        "type": true,
+                        "url_filename": true,
+                        "url_idx": true,
+                        "vendor_subtype": true,
+                        "vsys": true
+                      },
+                      "includeByName": {},
+                      "indexByName": {
+                        "_id": 9,
+                        "_index": 10,
+                        "_source": 11,
+                        "_type": 12,
+                        "action": 2,
+                        "actionflags": 26,
+                        "app_category": 27,
+                        "app_characteristic": 28,
+                        "app_is_saas": 29,
+                        "app_risk": 30,
+                        "app_sanctioned": 31,
+                        "app_subcategory": 32,
+                        "app_technology": 33,
+                        "application": 6,
+                        "bytes": 34,
+                        "bytes_received": 35,
+                        "bytes_sent": 36,
+                        "category": 37,
+                        "cluster_name": 38,
+                        "content_version": 39,
+                        "device_alias": 40,
+                        "device_name": 41,
+                        "device_vendor": 42,
+                        "direction": 43,
+                        "dst_country": 44,
+                        "dst_ip": 4,
+                        "dst_port": 5,
+                        "dst_zone": 45,
+                        "elapsed_time": 46,
+                        "facility": 47,
+                        "facility_num": 48,
+                        "flags": 49,
+                        "generated_time": 50,
+                        "gl2_accounted_message_size": 13,
+                        "gl2_input_message_size": 14,
+                        "gl2_message_id": 15,
+                        "gl2_processing_duration_ms": 16,
+                        "gl2_processing_timestamp": 17,
+                        "gl2_receive_timestamp": 18,
+                        "gl2_remote_ip": 19,
+                        "gl2_remote_port": 20,
+                        "gl2_source_input": 21,
+                        "gl2_source_node": 22,
+                        "high_res_timestamp": 51,
+                        "inbound_if": 52,
+                        "level": 1,
+                        "log_profile": 53,
+                        "log_type": 54,
+                        "message": 23,
+                        "nat_dst_ip": 55,
+                        "nat_dst_port": 56,
+                        "nat_src_ip": 57,
+                        "nat_src_port": 58,
+                        "offloaded": 59,
+                        "outbound_if": 60,
+                        "packets": 61,
+                        "pcap_id": 62,
+                        "pkts_received": 63,
+                        "pkts_sent": 64,
+                        "protocol": 7,
+                        "receive_time": 65,
+                        "repeat_count": 8,
+                        "report_id": 66,
+                        "rule_name": 67,
+                        "rule_uuid": 68,
+                        "seqno": 69,
+                        "serial_number": 70,
+                        "session_id": 71,
+                        "severity": 72,
+                        "site": 73,
+                        "source": 24,
+                        "src_country": 74,
+                        "src_ip": 3,
+                        "src_port": 75,
+                        "src_zone": 76,
+                        "streams": 25,
+                        "subtype": 77,
+                        "threat_category": 78,
+                        "threat_id": 79,
+                        "timestamp": 0,
+                        "tunneled_app": 80,
+                        "type": 81,
+                        "url_filename": 82,
+                        "url_idx": 83,
+                        "vsys": 84
+                      },
+                      "renameByName": {
+                        "_id": "",
+                        "action": "Action",
+                        "application": "App",
+                        "dst_ip": "Dest",
+                        "dst_port": "Port",
+                        "level": "Level",
+                        "message": "Raw Log Message",
+                        "pa_application": "Application",
+                        "pa_dst_ip": "Destination",
+                        "pa_dst_port": "Port",
+                        "pa_severity": "Severity",
+                        "pa_src_ip": "Source",
+                        "pa_threat_category": "Category",
+                        "protocol": "Protocol",
+                        "repeat_count": "Repeat Count",
+                        "src_ip": "Source",
+                        "timestamp": "Timestamp"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "description": "",
+          "id": 24,
+          "links": [],
+          "title": "Recent Log Events",
+          "vizConfig": {
+            "group": "table",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "thresholds"
+                  },
+                  "custom": {
+                    "align": "auto",
+                    "cellOptions": {
+                      "type": "auto"
+                    },
+                    "filterable": true,
+                    "footer": {
+                      "reducers": []
+                    },
+                    "inspect": false
+                  },
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      }
+                    ]
+                  }
+                },
+                "overrides": [
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Port"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 103
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Source"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 138
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Action",
+                      "scope": "series"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 102
+                      },
+                      {
+                        "id": "custom.cellOptions",
+                        "value": {
+                          "mode": "basic",
+                          "type": "color-background"
+                        }
+                      },
+                      {
+                        "id": "mappings",
+                        "value": [
+                          {
+                            "options": {
+                              "deny": {
+                                "color": "red",
+                                "index": 1
+                              },
+                              "drop": {
+                                "color": "red",
+                                "index": 0
+                              }
+                            },
+                            "type": "value"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Dest",
+                      "scope": "series"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 127
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Source",
+                      "scope": "series"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 135
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Protocol",
+                      "scope": "series"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 95
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "App",
+                      "scope": "series"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 129
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Repeat Count",
+                      "scope": "series"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 131
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Timestamp"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 190
+                      }
+                    ]
+                  }
+                ]
+              },
+              "options": {
+                "cellHeight": "sm",
+                "showHeader": true,
+                "sortBy": []
+              }
+            },
+            "version": "13.0.1+security-01"
+          }
+        }
+      },
+      "panel-25": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "",
+          "id": 25,
+          "links": [],
+          "title": "",
+          "transparent": true,
+          "vizConfig": {
+            "group": "text",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {},
+                "overrides": []
+              },
+              "options": {
+                "code": {
+                  "language": "plaintext",
+                  "showLineNumbers": false,
+                  "showMiniMap": false
+                },
+                "content": "- **Hostname:** `$hostname` | **Site:** `${site:text}` | **Device IP:** `$ipaddr`",
+                "mode": "markdown"
+              }
+            },
+            "version": "13.0.1+security-01"
+          }
+        }
+      },
+      "panel-26": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "",
+          "id": 26,
+          "links": [],
+          "title": "",
+          "transparent": true,
+          "vizConfig": {
+            "group": "text",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {},
+                "overrides": []
+              },
+              "options": {
+                "code": {
+                  "language": "plaintext",
+                  "showLineNumbers": false,
+                  "showMiniMap": false
+                },
+                "content": "\r\n- **Hostname:** `$hostname` | **Site:** `${site:text}` | **Device IP:** `$ipaddr`",
+                "mode": "markdown"
+              }
+            },
+            "version": "13.0.1+security-01"
+          }
+        }
+      },
+      "panel-27": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "",
+          "id": 27,
+          "links": [],
+          "title": "",
+          "transparent": true,
+          "vizConfig": {
+            "group": "text",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {},
+                "overrides": []
+              },
+              "options": {
+                "code": {
+                  "language": "plaintext",
+                  "showLineNumbers": false,
+                  "showMiniMap": false
+                },
+                "content": "- **Hostname:** `$hostname` | **Site:** `${site:text}` | **Device IP:** `$ipaddr`",
+                "mode": "markdown"
+              }
+            },
+            "version": "13.0.1+security-01"
+          }
+        }
+      },
+      "panel-28": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "ds-graylog-opensearch"
+                      },
+                      "group": "grafana-opensearch-datasource",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "alias": "Total Traffic",
+                        "bucketAggs": [
+                          {
+                            "field": "timestamp",
+                            "id": "2",
+                            "settings": {
+                              "interval": "auto"
+                            },
+                            "type": "date_histogram"
+                          }
+                        ],
+                        "format": "table",
+                        "luceneQueryType": "Metric",
+                        "metrics": [
+                          {
+                            "id": "1",
+                            "type": "count"
+                          }
+                        ],
+                        "query": "source: $hostname",
+                        "queryType": "lucene",
+                        "timeField": "timestamp"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                },
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "ds-graylog-opensearch"
+                      },
+                      "group": "grafana-opensearch-datasource",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "alias": "Total Denied",
+                        "bucketAggs": [
+                          {
+                            "field": "timestamp",
+                            "id": "2",
+                            "settings": {
+                              "interval": "1d"
+                            },
+                            "type": "date_histogram"
+                          }
+                        ],
+                        "format": "table",
+                        "luceneQueryType": "Metric",
+                        "metrics": [
+                          {
+                            "id": "1",
+                            "type": "count"
+                          }
+                        ],
+                        "query": "source: $hostname AND action:(deny OR drop)",
+                        "queryType": "lucene",
+                        "timeField": "timestamp"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "B"
+                  }
+                }
+              ],
+              "queryOptions": {
+                "interval": "1d"
+              },
+              "transformations": []
+            }
+          },
+          "description": "",
+          "id": 28,
+          "links": [],
+          "title": "",
+          "transparent": true,
+          "vizConfig": {
+            "group": "stat",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "fixedColor": "text",
+                    "mode": "continuous-RdYlGr"
+                  },
+                  "decimals": 0,
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      }
+                    ]
+                  },
+                  "unit": "locale"
+                },
+                "overrides": []
+              },
+              "options": {
+                "colorMode": "value",
+                "graphMode": "none",
+                "justifyMode": "auto",
+                "orientation": "horizontal",
+                "percentChangeColorMode": "standard",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
+                "showPercentChange": false,
+                "textMode": "auto",
+                "wideLayout": true
+              }
+            },
+            "version": "13.0.1+security-01"
+          }
+        }
+      },
+      "panel-29": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "ds-graylog-opensearch"
+                      },
+                      "group": "grafana-opensearch-datasource",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "alias": "",
+                        "bucketAggs": [
+                          {
+                            "field": "timestamp",
+                            "id": "2",
+                            "settings": {
+                              "interval": "auto"
+                            },
+                            "type": "date_histogram"
+                          }
+                        ],
+                        "format": "table",
+                        "luceneQueryType": "Logs",
+                        "metrics": [
+                          {
+                            "id": "1",
+                            "type": "logs"
+                          }
+                        ],
+                        "query": "source: $hostname",
+                        "queryType": "lucene",
+                        "timeField": "timestamp"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": [
+                {
+                  "group": "filterFieldsByName",
+                  "kind": "Transformation",
+                  "spec": {
+                    "options": {
+                      "include": {
+                        "pattern": "device_alias"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "description": "",
+          "id": 29,
+          "links": [],
+          "title": "",
+          "transparent": true,
+          "vizConfig": {
+            "group": "stat",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "fixedColor": "blue",
+                    "mode": "fixed"
+                  },
+                  "displayName": "Hostname",
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      }
+                    ]
+                  }
+                },
+                "overrides": []
+              },
+              "options": {
+                "colorMode": "value",
+                "graphMode": "none",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "percentChangeColorMode": "standard",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "/.*/",
+                  "values": false
+                },
+                "showPercentChange": false,
+                "text": {
+                  "valueSize": 26
+                },
+                "textMode": "value",
+                "wideLayout": true
+              }
+            },
+            "version": "13.0.1+security-01"
+          }
+        }
+      },
+      "panel-3": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "ds-graylog-opensearch"
+                      },
+                      "group": "grafana-opensearch-datasource",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "alias": "Critical",
+                        "bucketAggs": [
+                          {
+                            "field": "timestamp",
+                            "id": "2",
+                            "settings": {
+                              "interval": "10m"
+                            },
+                            "type": "date_histogram"
+                          }
+                        ],
+                        "format": "table",
+                        "luceneQueryType": "Metric",
+                        "metrics": [
+                          {
+                            "id": "1",
+                            "type": "count"
+                          }
+                        ],
+                        "query": "source: $hostname AND (severity: critical OR log_type: ALARM)",
+                        "queryType": "lucene",
+                        "timeField": "timestamp"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                },
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "ds-graylog-opensearch"
+                      },
+                      "group": "grafana-opensearch-datasource",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "alias": "High",
+                        "bucketAggs": [
+                          {
+                            "field": "timestamp",
+                            "id": "2",
+                            "settings": {
+                              "interval": "auto"
+                            },
+                            "type": "date_histogram"
+                          }
+                        ],
+                        "format": "table",
+                        "luceneQueryType": "Metric",
+                        "metrics": [
+                          {
+                            "id": "1",
+                            "type": "count"
+                          }
+                        ],
+                        "query": "source: $hostname AND (severity: high OR (log_type: EVENT AND log_level: ERROR))",
+                        "queryType": "lucene",
+                        "timeField": "timestamp"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "B"
+                  }
+                }
+              ],
+              "queryOptions": {
+                "interval": "10m"
+              },
+              "transformations": []
+            }
+          },
+          "description": "",
+          "id": 3,
+          "links": [],
+          "title": "Threat count overtime",
+          "vizConfig": {
+            "group": "barchart",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "axisBorderShow": false,
+                    "axisCenteredZero": false,
+                    "axisColorMode": "text",
+                    "axisGridShow": true,
+                    "axisLabel": "",
+                    "axisPlacement": "auto",
+                    "axisSoftMin": 1,
+                    "fillOpacity": 100,
+                    "gradientMode": "none",
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
+                    "lineWidth": 2,
+                    "scaleDistribution": {
+                      "linearThreshold": 1,
+                      "log": 2,
+                      "type": "symlog"
+                    },
+                    "thresholdsStyle": {
+                      "mode": "off"
+                    }
+                  },
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      },
+                      {
+                        "color": "red",
+                        "value": 80
+                      }
+                    ]
+                  }
+                },
+                "overrides": [
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Critical"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "red",
+                          "mode": "fixed"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              "options": {
+                "barRadius": 0,
+                "barWidth": 0.83,
+                "fullHighlight": false,
+                "groupWidth": 0.7,
+                "legend": {
+                  "calcs": [],
+                  "displayMode": "list",
+                  "placement": "bottom",
+                  "showLegend": true
+                },
+                "orientation": "vertical",
+                "showValue": "always",
+                "stacking": "normal",
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "multi",
+                  "sort": "none"
+                },
+                "xField": "Time",
+                "xTickLabelRotation": 0,
+                "xTickLabelSpacing": 100
+              }
+            },
+            "version": "13.0.1+security-01"
+          }
+        }
+      },
+      "panel-30": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "ds-graylog-opensearch"
+                      },
+                      "group": "grafana-opensearch-datasource",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "alias": "",
+                        "bucketAggs": [
+                          {
+                            "field": "timestamp",
+                            "id": "2",
+                            "settings": {
+                              "interval": "auto"
+                            },
+                            "type": "date_histogram"
+                          }
+                        ],
+                        "format": "table",
+                        "luceneQueryType": "Logs",
+                        "metrics": [
+                          {
+                            "id": "1",
+                            "type": "logs"
+                          }
+                        ],
+                        "query": "source: $hostname",
+                        "queryType": "lucene",
+                        "timeField": "timestamp"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": [
+                {
+                  "group": "filterFieldsByName",
+                  "kind": "Transformation",
+                  "spec": {
+                    "options": {
+                      "include": {
+                        "pattern": "device_alias"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "description": "",
+          "id": 30,
+          "links": [],
+          "title": "",
+          "transparent": true,
+          "vizConfig": {
+            "group": "stat",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "fixedColor": "blue",
+                    "mode": "fixed"
+                  },
+                  "displayName": "Hostname",
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      }
+                    ]
+                  }
+                },
+                "overrides": []
+              },
+              "options": {
+                "colorMode": "value",
+                "graphMode": "none",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "percentChangeColorMode": "standard",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "/.*/",
+                  "values": false
+                },
+                "showPercentChange": false,
+                "text": {
+                  "valueSize": 26
+                },
+                "textMode": "value",
+                "wideLayout": true
+              }
+            },
+            "version": "13.0.1+security-01"
+          }
+        }
+      },
+      "panel-31": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "ds-graylog-opensearch"
+                      },
+                      "group": "grafana-opensearch-datasource",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "alias": "",
+                        "bucketAggs": [
+                          {
+                            "field": "timestamp",
+                            "id": "2",
+                            "settings": {
+                              "interval": "auto"
+                            },
+                            "type": "date_histogram"
+                          }
+                        ],
+                        "format": "table",
+                        "luceneQueryType": "Logs",
+                        "metrics": [
+                          {
+                            "id": "1",
+                            "type": "logs"
+                          }
+                        ],
+                        "query": "source: $hostname",
+                        "queryType": "lucene",
+                        "timeField": "timestamp"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": [
+                {
+                  "group": "filterFieldsByName",
+                  "kind": "Transformation",
+                  "spec": {
+                    "options": {
+                      "include": {
+                        "pattern": "device_alias"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "description": "",
+          "id": 31,
+          "links": [],
+          "title": "",
+          "transparent": true,
+          "vizConfig": {
+            "group": "stat",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "fixedColor": "blue",
+                    "mode": "fixed"
+                  },
+                  "displayName": "Hostname",
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      }
+                    ]
+                  }
+                },
+                "overrides": []
+              },
+              "options": {
+                "colorMode": "value",
+                "graphMode": "none",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "percentChangeColorMode": "standard",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "/.*/",
+                  "values": false
+                },
+                "showPercentChange": false,
+                "text": {
+                  "valueSize": 26
+                },
+                "textMode": "value",
+                "wideLayout": true
+              }
+            },
+            "version": "13.0.1+security-01"
+          }
+        }
+      },
+      "panel-32": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "ds-graylog-opensearch"
+                      },
+                      "group": "grafana-opensearch-datasource",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "alias": "",
+                        "bucketAggs": [
+                          {
+                            "field": "timestamp",
+                            "id": "2",
+                            "settings": {
+                              "interval": "auto"
+                            },
+                            "type": "date_histogram"
+                          }
+                        ],
+                        "format": "table",
+                        "luceneQueryType": "Logs",
+                        "metrics": [
+                          {
+                            "id": "1",
+                            "type": "logs"
+                          }
+                        ],
+                        "query": "source: $hostname",
+                        "queryType": "lucene",
+                        "timeField": "timestamp"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": [
+                {
+                  "group": "filterFieldsByName",
+                  "kind": "Transformation",
+                  "spec": {
+                    "options": {
+                      "include": {
+                        "pattern": "device_alias"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "description": "",
+          "id": 32,
+          "links": [],
+          "title": "",
+          "transparent": true,
+          "vizConfig": {
+            "group": "stat",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "fixedColor": "blue",
+                    "mode": "fixed"
+                  },
+                  "displayName": "Hostname",
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      }
+                    ]
+                  }
+                },
+                "overrides": []
+              },
+              "options": {
+                "colorMode": "value",
+                "graphMode": "none",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "percentChangeColorMode": "standard",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "/.*/",
+                  "values": false
+                },
+                "showPercentChange": false,
+                "text": {
+                  "valueSize": 26
+                },
+                "textMode": "value",
+                "wideLayout": true
+              }
+            },
+            "version": "13.0.1+security-01"
+          }
+        }
+      },
+      "panel-33": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "ds-graylog-opensearch"
+                      },
+                      "group": "grafana-opensearch-datasource",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "alias": "",
+                        "bucketAggs": [
+                          {
+                            "field": "session_end_reason",
+                            "id": "2",
+                            "settings": {
+                              "min_doc_count": "1",
+                              "order": "desc",
+                              "orderBy": "1",
+                              "size": "5"
+                            },
+                            "type": "terms"
+                          }
+                        ],
+                        "format": "table",
+                        "luceneQueryType": "Metric",
+                        "metrics": [
+                          {
+                            "id": "1",
+                            "type": "count"
+                          }
+                        ],
+                        "query": "source: $hostname",
+                        "queryType": "lucene",
+                        "timeField": "timestamp"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "",
+          "id": 33,
+          "links": [],
+          "title": "Traffic by Session End Reason",
+          "vizConfig": {
+            "group": "piechart",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "fixedColor": "red",
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    }
+                  },
+                  "unit": "bytes"
+                },
+                "overrides": [
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "aged-out"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "#73BF69",
+                          "mode": "fixed"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              "options": {
+                "displayLabels": [
+                  "percent"
+                ],
+                "legend": {
+                  "displayMode": "table",
+                  "placement": "bottom",
+                  "showLegend": true,
+                  "values": [
+                    "value"
+                  ]
+                },
+                "pieType": "donut",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": true
+                },
+                "sort": "desc",
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "single",
+                  "sort": "none"
+                }
+              }
+            },
+            "version": "13.0.1+security-01"
+          }
+        }
+      },
+      "panel-4": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "ds-graylog-opensearch"
+                      },
+                      "group": "grafana-opensearch-datasource",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "alias": "",
+                        "bucketAggs": [
+                          {
+                            "field": "timestamp",
+                            "id": "2",
+                            "settings": {
+                              "interval": "auto"
+                            },
+                            "type": "date_histogram"
+                          }
+                        ],
+                        "format": "table",
+                        "luceneQueryType": "Metric",
+                        "metrics": [
+                          {
+                            "id": "1",
+                            "type": "count"
+                          }
+                        ],
+                        "query": "source: $hostname",
+                        "queryType": "lucene",
+                        "timeField": "timestamp"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {
+                "hideTimeOverride": true,
+                "interval": "15m",
+                "timeFrom": "15m"
+              },
+              "transformations": []
+            }
+          },
+          "description": "",
+          "id": 4,
+          "links": [],
+          "title": "",
+          "vizConfig": {
+            "group": "stat",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "thresholds"
+                  },
+                  "displayName": "Status",
+                  "mappings": [
+                    {
+                      "options": {
+                        "0": {
+                          "color": "red",
+                          "index": 0,
+                          "text": "Down"
+                        }
+                      },
+                      "type": "value"
+                    },
+                    {
+                      "options": {
+                        "from": 1,
+                        "result": {
+                          "color": "green",
+                          "index": 1,
+                          "text": "Up"
+                        }
+                      },
+                      "type": "range"
+                    }
+                  ],
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      }
+                    ]
+                  }
+                },
+                "overrides": []
+              },
+              "options": {
+                "colorMode": "background_solid",
+                "graphMode": "none",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "percentChangeColorMode": "standard",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
+                "showPercentChange": false,
+                "textMode": "auto",
+                "wideLayout": true
+              }
+            },
+            "version": "13.0.1+security-01"
+          }
+        }
+      },
+      "panel-5": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "ds-graylog-opensearch"
+                      },
+                      "group": "grafana-opensearch-datasource",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "alias": "",
+                        "bucketAggs": [
+                          {
+                            "field": "timestamp",
+                            "id": "2",
+                            "settings": {
+                              "interval": "1m"
+                            },
+                            "type": "date_histogram"
+                          }
+                        ],
+                        "format": "table",
+                        "luceneQueryType": "Metric",
+                        "metrics": [
+                          {
+                            "id": "1",
+                            "type": "count"
+                          }
+                        ],
+                        "query": "source: $hostname",
+                        "queryType": "lucene",
+                        "timeField": "timestamp"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {
+                "hideTimeOverride": true,
+                "interval": "1m",
+                "timeFrom": "5m"
+              },
+              "transformations": []
+            }
+          },
+          "description": "",
+          "id": 5,
+          "links": [],
+          "title": "",
+          "vizConfig": {
+            "group": "stat",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "thresholds"
+                  },
+                  "decimals": 0,
+                  "displayName": "Log msg / min",
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      },
+                      {
+                        "color": "red",
+                        "value": 0
+                      },
+                      {
+                        "color": "#EAB839",
+                        "value": 1000
+                      },
+                      {
+                        "color": "green",
+                        "value": 1001
+                      }
+                    ]
+                  },
+                  "unit": "locale"
+                },
+                "overrides": []
+              },
+              "options": {
+                "colorMode": "value",
+                "graphMode": "area",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "percentChangeColorMode": "standard",
+                "reduceOptions": {
+                  "calcs": [
+                    "mean"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
+                "showPercentChange": false,
+                "textMode": "auto",
+                "wideLayout": true
+              }
+            },
+            "version": "13.0.1+security-01"
+          }
+        }
+      },
+      "panel-6": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "ds-graylog-opensearch"
+                      },
+                      "group": "grafana-opensearch-datasource",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "alias": "Inbound",
+                        "bucketAggs": [
+                          {
+                            "field": "timestamp",
+                            "id": "2",
+                            "settings": {
+                              "interval": "5m"
+                            },
+                            "type": "date_histogram"
+                          }
+                        ],
+                        "format": "table",
+                        "luceneQueryType": "Metric",
+                        "metrics": [
+                          {
+                            "field": "bytes_received",
+                            "id": "1",
+                            "type": "sum"
+                          }
+                        ],
+                        "query": "source: $hostname",
+                        "queryType": "lucene",
+                        "timeField": "timestamp"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                },
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "ds-graylog-opensearch"
+                      },
+                      "group": "grafana-opensearch-datasource",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "alias": "Outbound",
+                        "bucketAggs": [
+                          {
+                            "field": "timestamp",
+                            "id": "2",
+                            "settings": {
+                              "interval": "5m"
+                            },
+                            "type": "date_histogram"
+                          }
+                        ],
+                        "format": "table",
+                        "luceneQueryType": "Metric",
+                        "metrics": [
+                          {
+                            "field": "bytes_sent",
+                            "id": "1",
+                            "type": "sum"
+                          }
+                        ],
+                        "query": "source: $hostname",
+                        "queryType": "lucene",
+                        "timeField": "timestamp"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "B"
+                  }
+                }
+              ],
+              "queryOptions": {
+                "interval": "1h"
+              },
+              "transformations": []
+            }
+          },
+          "description": "",
+          "id": 6,
+          "links": [],
+          "title": "Traffic timeline",
+          "vizConfig": {
+            "group": "timeseries",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "axisBorderShow": false,
+                    "axisCenteredZero": false,
+                    "axisColorMode": "text",
+                    "axisLabel": "",
+                    "axisPlacement": "auto",
+                    "barAlignment": 0,
+                    "barWidthFactor": 0.6,
+                    "drawStyle": "bars",
+                    "fillOpacity": 100,
+                    "gradientMode": "none",
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    },
+                    "insertNulls": false,
+                    "lineInterpolation": "linear",
+                    "lineWidth": 1,
+                    "pointSize": 5,
+                    "scaleDistribution": {
+                      "type": "linear"
+                    },
+                    "showPoints": "auto",
+                    "showValues": false,
+                    "spanNulls": false,
+                    "stacking": {
+                      "group": "A",
+                      "mode": "normal"
+                    },
+                    "thresholdsStyle": {
+                      "mode": "off"
+                    }
+                  },
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      }
+                    ]
+                  },
+                  "unit": "bytes"
+                },
+                "overrides": [
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Outbound"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "blue",
+                          "mode": "fixed"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Inbound"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "fixedColor": "light-yellow",
+                          "mode": "fixed"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              "options": {
+                "annotations": {
+                  "clustering": -1,
+                  "multiLane": false
+                },
+                "legend": {
+                  "calcs": [],
+                  "displayMode": "list",
+                  "placement": "bottom",
+                  "showLegend": true
+                },
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "multi",
+                  "sort": "asc"
+                }
+              }
+            },
+            "version": "13.0.1+security-01"
+          }
+        }
+      },
+      "panel-7": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": true,
+                    "query": {
+                      "datasource": {
+                        "name": "ds-graylog-opensearch"
+                      },
+                      "group": "grafana-opensearch-datasource",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "alias": "Inbound",
+                        "bucketAggs": [
+                          {
+                            "field": "timestamp",
+                            "id": "2",
+                            "settings": {
+                              "interval": "10s"
+                            },
+                            "type": "date_histogram"
+                          }
+                        ],
+                        "format": "table",
+                        "luceneQueryType": "Metric",
+                        "metrics": [
+                          {
+                            "field": "bytes_received",
+                            "id": "1",
+                            "type": "sum"
+                          }
+                        ],
+                        "query": "source: $hostname",
+                        "queryType": "lucene",
+                        "timeField": "timestamp"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                },
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "__expr__"
+                      },
+                      "group": "__expr__",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "expression": "$A/10",
+                        "type": "math"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "B"
+                  }
+                }
+              ],
+              "queryOptions": {
+                "hideTimeOverride": true,
+                "interval": "10s",
+                "timeFrom": "5m"
+              },
+              "transformations": []
+            }
+          },
+          "description": "",
+          "id": 7,
+          "links": [],
+          "title": "",
+          "transparent": true,
+          "vizConfig": {
+            "group": "stat",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "thresholds"
+                  },
+                  "displayName": "Inbound",
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "light-yellow",
+                        "value": 0
+                      }
+                    ]
+                  },
+                  "unit": "Bps"
+                },
+                "overrides": []
+              },
+              "options": {
+                "colorMode": "value",
+                "graphMode": "none",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "percentChangeColorMode": "standard",
+                "reduceOptions": {
+                  "calcs": [
+                    "mean"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
+                "showPercentChange": false,
+                "textMode": "value_and_name",
+                "wideLayout": true
+              }
+            },
+            "version": "13.0.1+security-01"
+          }
+        }
+      },
+      "panel-9": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "ds-graylog-opensearch"
+                      },
+                      "group": "grafana-opensearch-datasource",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "alias": "Total Traffic",
+                        "bucketAggs": [
+                          {
+                            "field": "timestamp",
+                            "id": "2",
+                            "settings": {
+                              "interval": "auto"
+                            },
+                            "type": "date_histogram"
+                          }
+                        ],
+                        "format": "table",
+                        "luceneQueryType": "Metric",
+                        "metrics": [
+                          {
+                            "field": "bytes",
+                            "id": "1",
+                            "type": "sum"
+                          }
+                        ],
+                        "query": "source: $hostname",
+                        "queryType": "lucene",
+                        "timeField": "timestamp"
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "",
+          "id": 9,
+          "links": [],
+          "title": "",
+          "transparent": true,
+          "vizConfig": {
+            "group": "stat",
+            "kind": "VizConfig",
+            "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "thresholds"
+                  },
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "text",
+                        "value": 0
+                      }
+                    ]
+                  },
+                  "unit": "decbytes"
+                },
+                "overrides": []
+              },
+              "options": {
+                "colorMode": "value",
+                "graphMode": "area",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "percentChangeColorMode": "standard",
+                "reduceOptions": {
+                  "calcs": [
+                    "sum"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
+                "showPercentChange": false,
+                "textMode": "auto",
+                "wideLayout": true
+              }
+            },
+            "version": "13.0.1+security-01"
+          }
+        }
+      }
+    },
+    "layout": {
+      "kind": "TabsLayout",
+      "spec": {
+        "tabs": [
+          {
+            "kind": "TabsLayoutTab",
+            "spec": {
+              "layout": {
+                "kind": "GridLayout",
+                "spec": {
+                  "items": [
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-31"
+                        },
+                        "height": 2,
+                        "width": 24,
+                        "x": 0,
+                        "y": 0
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-1"
+                        },
+                        "height": 2,
+                        "width": 24,
+                        "x": 0,
+                        "y": 2
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-4"
+                        },
+                        "height": 4,
+                        "width": 4,
+                        "x": 0,
+                        "y": 4
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-2"
+                        },
+                        "height": 8,
+                        "width": 20,
+                        "x": 4,
+                        "y": 4
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-5"
+                        },
+                        "height": 4,
+                        "width": 4,
+                        "x": 0,
+                        "y": 8
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-24"
+                        },
+                        "height": 11,
+                        "width": 24,
+                        "x": 0,
+                        "y": 12
+                      }
+                    }
+                  ]
+                }
+              },
+              "title": "Health"
+            }
+          },
+          {
+            "kind": "TabsLayoutTab",
+            "spec": {
+              "layout": {
+                "kind": "RowsLayout",
+                "spec": {
+                  "rows": [
+                    {
+                      "kind": "RowsLayoutRow",
+                      "spec": {
+                        "collapse": false,
+                        "hideHeader": true,
+                        "layout": {
+                          "kind": "GridLayout",
+                          "spec": {
+                            "items": [
+                              {
+                                "kind": "GridLayoutItem",
+                                "spec": {
+                                  "element": {
+                                    "kind": "ElementReference",
+                                    "name": "panel-29"
+                                  },
+                                  "height": 2,
+                                  "width": 24,
+                                  "x": 0,
+                                  "y": 0
+                                }
+                              },
+                              {
+                                "kind": "GridLayoutItem",
+                                "spec": {
+                                  "element": {
+                                    "kind": "ElementReference",
+                                    "name": "panel-26"
+                                  },
+                                  "height": 2,
+                                  "width": 24,
+                                  "x": 0,
+                                  "y": 2
+                                }
+                              },
+                              {
+                                "kind": "GridLayoutItem",
+                                "spec": {
+                                  "element": {
+                                    "kind": "ElementReference",
+                                    "name": "panel-9"
+                                  },
+                                  "height": 5,
+                                  "width": 4,
+                                  "x": 0,
+                                  "y": 4
+                                }
+                              },
+                              {
+                                "kind": "GridLayoutItem",
+                                "spec": {
+                                  "element": {
+                                    "kind": "ElementReference",
+                                    "name": "panel-6"
+                                  },
+                                  "height": 7,
+                                  "width": 20,
+                                  "x": 4,
+                                  "y": 4
+                                }
+                              },
+                              {
+                                "kind": "GridLayoutItem",
+                                "spec": {
+                                  "element": {
+                                    "kind": "ElementReference",
+                                    "name": "panel-7"
+                                  },
+                                  "height": 2,
+                                  "width": 2,
+                                  "x": 0,
+                                  "y": 9
+                                }
+                              },
+                              {
+                                "kind": "GridLayoutItem",
+                                "spec": {
+                                  "element": {
+                                    "kind": "ElementReference",
+                                    "name": "panel-10"
+                                  },
+                                  "height": 2,
+                                  "width": 2,
+                                  "x": 2,
+                                  "y": 9
+                                }
+                              }
+                            ]
+                          }
+                        },
+                        "title": "New row"
+                      }
+                    },
+                    {
+                      "kind": "RowsLayoutRow",
+                      "spec": {
+                        "collapse": false,
+                        "fillScreen": false,
+                        "hideHeader": false,
+                        "layout": {
+                          "kind": "AutoGridLayout",
+                          "spec": {
+                            "columnWidthMode": "standard",
+                            "items": [
+                              {
+                                "kind": "AutoGridLayoutItem",
+                                "spec": {
+                                  "element": {
+                                    "kind": "ElementReference",
+                                    "name": "panel-11"
+                                  }
+                                }
+                              },
+                              {
+                                "kind": "AutoGridLayoutItem",
+                                "spec": {
+                                  "conditionalRendering": {
+                                    "kind": "ConditionalRenderingGroup",
+                                    "spec": {
+                                      "condition": "and",
+                                      "items": [
+                                        {
+                                          "kind": "ConditionalRenderingData",
+                                          "spec": {
+                                            "value": false
+                                          }
+                                        }
+                                      ],
+                                      "visibility": "hide"
+                                    }
+                                  },
+                                  "element": {
+                                    "kind": "ElementReference",
+                                    "name": "panel-12"
+                                  }
+                                }
+                              },
+                              {
+                                "kind": "AutoGridLayoutItem",
+                                "spec": {
+                                  "conditionalRendering": {
+                                    "kind": "ConditionalRenderingGroup",
+                                    "spec": {
+                                      "condition": "and",
+                                      "items": [
+                                        {
+                                          "kind": "ConditionalRenderingData",
+                                          "spec": {
+                                            "value": false
+                                          }
+                                        }
+                                      ],
+                                      "visibility": "hide"
+                                    }
+                                  },
+                                  "element": {
+                                    "kind": "ElementReference",
+                                    "name": "panel-33"
+                                  }
+                                }
+                              }
+                            ],
+                            "maxColumnCount": 3,
+                            "rowHeightMode": "tall"
+                          }
+                        },
+                        "title": "Traffic Stat"
+                      }
+                    },
+                    {
+                      "kind": "RowsLayoutRow",
+                      "spec": {
+                        "collapse": false,
+                        "fillScreen": true,
+                        "layout": {
+                          "kind": "AutoGridLayout",
+                          "spec": {
+                            "columnWidthMode": "standard",
+                            "fillScreen": true,
+                            "items": [
+                              {
+                                "kind": "AutoGridLayoutItem",
+                                "spec": {
+                                  "element": {
+                                    "kind": "ElementReference",
+                                    "name": "panel-13"
+                                  }
+                                }
+                              }
+                            ],
+                            "maxColumnCount": 3,
+                            "rowHeightMode": "tall"
+                          }
+                        },
+                        "title": "Usage Table"
+                      }
+                    }
+                  ]
+                }
+              },
+              "title": "Traffic"
+            }
+          },
+          {
+            "kind": "TabsLayoutTab",
+            "spec": {
+              "layout": {
+                "kind": "GridLayout",
+                "spec": {
+                  "items": [
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-30"
+                        },
+                        "height": 2,
+                        "width": 24,
+                        "x": 0,
+                        "y": 0
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-27"
+                        },
+                        "height": 2,
+                        "width": 24,
+                        "x": 0,
+                        "y": 2
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-18"
+                        },
+                        "height": 5,
+                        "width": 4,
+                        "x": 0,
+                        "y": 4
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-28"
+                        },
+                        "height": 5,
+                        "width": 3,
+                        "x": 4,
+                        "y": 4
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-23"
+                        },
+                        "height": 3,
+                        "width": 24,
+                        "x": 0,
+                        "y": 9
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-19"
+                        },
+                        "height": 11,
+                        "width": 12,
+                        "x": 0,
+                        "y": 12
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-20"
+                        },
+                        "height": 11,
+                        "width": 12,
+                        "x": 12,
+                        "y": 12
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-22"
+                        },
+                        "height": 14,
+                        "width": 24,
+                        "x": 0,
+                        "y": 23
+                      }
+                    }
+                  ]
+                }
+              },
+              "title": "Denied Traffic"
+            }
+          },
+          {
+            "kind": "TabsLayoutTab",
+            "spec": {
+              "layout": {
+                "kind": "RowsLayout",
+                "spec": {
+                  "rows": [
+                    {
+                      "kind": "RowsLayoutRow",
+                      "spec": {
+                        "collapse": false,
+                        "hideHeader": true,
+                        "layout": {
+                          "kind": "GridLayout",
+                          "spec": {
+                            "items": [
+                              {
+                                "kind": "GridLayoutItem",
+                                "spec": {
+                                  "element": {
+                                    "kind": "ElementReference",
+                                    "name": "panel-32"
+                                  },
+                                  "height": 2,
+                                  "width": 24,
+                                  "x": 0,
+                                  "y": 0
+                                }
+                              },
+                              {
+                                "kind": "GridLayoutItem",
+                                "spec": {
+                                  "element": {
+                                    "kind": "ElementReference",
+                                    "name": "panel-25"
+                                  },
+                                  "height": 2,
+                                  "width": 24,
+                                  "x": 0,
+                                  "y": 2
+                                }
+                              }
+                            ]
+                          }
+                        },
+                        "title": "New row"
+                      }
+                    },
+                    {
+                      "kind": "RowsLayoutRow",
+                      "spec": {
+                        "collapse": false,
+                        "layout": {
+                          "kind": "GridLayout",
+                          "spec": {
+                            "items": [
+                              {
+                                "kind": "GridLayoutItem",
+                                "spec": {
+                                  "element": {
+                                    "kind": "ElementReference",
+                                    "name": "panel-14"
+                                  },
+                                  "height": 3,
+                                  "width": 6,
+                                  "x": 0,
+                                  "y": 0
+                                }
+                              },
+                              {
+                                "kind": "GridLayoutItem",
+                                "spec": {
+                                  "element": {
+                                    "kind": "ElementReference",
+                                    "name": "panel-3"
+                                  },
+                                  "height": 6,
+                                  "width": 18,
+                                  "x": 6,
+                                  "y": 0
+                                }
+                              },
+                              {
+                                "kind": "GridLayoutItem",
+                                "spec": {
+                                  "element": {
+                                    "kind": "ElementReference",
+                                    "name": "panel-15"
+                                  },
+                                  "height": 3,
+                                  "width": 6,
+                                  "x": 0,
+                                  "y": 3
+                                }
+                              }
+                            ]
+                          }
+                        },
+                        "title": "Threat Count"
+                      }
+                    },
+                    {
+                      "kind": "RowsLayoutRow",
+                      "spec": {
+                        "collapse": false,
+                        "fillScreen": true,
+                        "layout": {
+                          "kind": "GridLayout",
+                          "spec": {
+                            "items": [
+                              {
+                                "kind": "GridLayoutItem",
+                                "spec": {
+                                  "element": {
+                                    "kind": "ElementReference",
+                                    "name": "panel-21"
+                                  },
+                                  "height": 12,
+                                  "width": 24,
+                                  "x": 0,
+                                  "y": 0
+                                }
+                              }
+                            ]
+                          }
+                        },
+                        "title": "Recent Threat Event"
+                      }
+                    }
+                  ]
+                }
+              },
+              "title": "Threat"
+            }
+          }
+        ]
+      }
+    },
+    "links": [
+      {
+        "asDropdown": false,
+        "icon": "external link",
+        "includeVars": false,
+        "keepTime": false,
+        "tags": [],
+        "targetBlank": true,
+        "title": "Source (GitHub)",
+        "tooltip": "View source file in repository",
+        "type": "link",
+        "url": "https://github.com/tipcoasphalt/graylog/blob/migration/gitsync-trial/grafana-gitsync/network-devices-details.json"
+      }
+    ],
+    "liveNow": false,
+    "preferences": {
+      "layout": {
+        "kind": "GridLayout",
+        "spec": {
+          "items": []
+        }
+      }
+    },
+    "preload": false,
+    "tags": [],
+    "timeSettings": {
+      "autoRefresh": "",
+      "autoRefreshIntervals": [
+        "5s",
+        "10s",
+        "30s",
+        "1m",
+        "5m",
+        "15m",
+        "30m",
+        "1h",
+        "2h",
+        "1d"
+      ],
+      "fiscalYearStartMonth": 0,
+      "from": "now-12h",
+      "hideTimepicker": false,
+      "timezone": "browser",
+      "to": "now"
+    },
+    "title": "NOC Details",
+    "variables": [
+      {
+        "kind": "QueryVariable",
+        "spec": {
+          "allowCustomValue": true,
+          "current": {
+            "text": [
+              "pa-3220"
+            ],
+            "value": [
+              "pa-3220"
+            ]
+          },
+          "definition": "{\"find\": \"terms\", \"field\": \"source\"}",
+          "hide": "hideVariable",
+          "includeAll": false,
+          "multi": true,
+          "name": "hostname",
+          "options": [],
+          "query": {
+            "datasource": {
+              "name": "ds-graylog-opensearch"
+            },
+            "group": "grafana-opensearch-datasource",
+            "kind": "DataQuery",
+            "spec": {
+              "__legacyStringValue": "{\"find\": \"terms\", \"field\": \"source\"}"
+            },
+            "version": "v0"
+          },
+          "refresh": "onDashboardLoad",
+          "regex": "",
+          "regexApplyTo": "value",
+          "skipUrlSync": false,
+          "sort": "disabled"
+        }
+      },
+      {
+        "kind": "QueryVariable",
+        "spec": {
+          "allowCustomValue": true,
+          "current": {
+            "text": [
+              "172.17.88.3"
+            ],
+            "value": [
+              "172.17.88.3"
+            ]
+          },
+          "definition": "{\"find\": \"terms\", \"field\": \"gl2_remote_ip\", \"query\": \"source:$hostname\"}",
+          "hide": "hideVariable",
+          "includeAll": false,
+          "multi": true,
+          "name": "ipaddr",
+          "options": [],
+          "query": {
+            "datasource": {
+              "name": "ds-graylog-opensearch"
+            },
+            "group": "grafana-opensearch-datasource",
+            "kind": "DataQuery",
+            "spec": {
+              "__legacyStringValue": "{\"find\": \"terms\", \"field\": \"gl2_remote_ip\", \"query\": \"source:$hostname\"}"
+            },
+            "version": "v0"
+          },
+          "refresh": "onDashboardLoad",
+          "regex": "",
+          "regexApplyTo": "value",
+          "skipUrlSync": false,
+          "sort": "disabled"
+        }
+      },
+      {
+        "kind": "QueryVariable",
+        "spec": {
+          "allowCustomValue": true,
+          "current": {
+            "text": "Palo Alto Firewall",
+            "value": "Palo Alto Firewall"
+          },
+          "definition": "{\"find\": \"terms\", \"field\": \"device_alias\", \"query\": \"source:$hostname\"}",
+          "hide": "hideVariable",
+          "includeAll": false,
+          "multi": false,
+          "name": "dev_name",
+          "options": [],
+          "query": {
+            "datasource": {
+              "name": "ds-graylog-opensearch"
+            },
+            "group": "grafana-opensearch-datasource",
+            "kind": "DataQuery",
+            "spec": {
+              "__legacyStringValue": "{\"find\": \"terms\", \"field\": \"device_alias\", \"query\": \"source:$hostname\"}"
+            },
+            "version": "v0"
+          },
+          "refresh": "onDashboardLoad",
+          "regex": "",
+          "regexApplyTo": "value",
+          "skipUrlSync": false,
+          "sort": "disabled"
+        }
+      },
+      {
+        "kind": "CustomVariable",
+        "spec": {
+          "allowCustomValue": true,
+          "current": {
+            "text": "Tipco Asphalt HO",
+            "value": "BKK_HO"
+          },
+          "hide": "hideVariable",
+          "includeAll": false,
+          "multi": false,
+          "name": "site",
+          "options": [],
+          "query": "Tipco Asphalt HO : BKK_HO,Tipco Asphalt Phrapradaeng : SPK_PPD",
+          "skipUrlSync": false,
+          "valuesFormat": "csv"
+        }
+      },
+      {
+        "datasource": {
+          "name": "ds-graylog-opensearch"
+        },
+        "group": "grafana-opensearch-datasource",
+        "kind": "AdhocVariable",
+        "spec": {
+          "allowCustomValue": true,
+          "baseFilters": [],
+          "defaultKeys": [],
+          "enableGroupBy": false,
+          "filters": [],
+          "hide": "dontHide",
+          "name": "Filters",
+          "skipUrlSync": false
+        }
+      }
+    ]
+  }
+}

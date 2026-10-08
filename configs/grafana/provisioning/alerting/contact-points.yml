@@ -1,0 +1,21 @@
+apiVersion: 1
+contactPoints:
+  - orgId: 1
+    name: firewall-critical-channel
+    receivers:
+      - uid: firewall-critical-channel
+        type: webhook
+        settings:
+          url: $GF_TEAMS_CRITICAL_WEBHOOK_URL
+          httpMethod: POST
+        disableResolveMessage: true
+
+  - orgId: 1
+    name: firewall-warning-channel
+    receivers:
+      - uid: firewall-warning-channel
+        type: webhook
+        settings:
+          url: $GF_TEAMS_WARNING_WEBHOOK_URL
+          httpMethod: POST
+        disableResolveMessage: true

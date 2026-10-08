@@ -1,0 +1,14 @@
+{
+  "order": 10,
+  "index_patterns": [
+    "pan_os_logs_*"
+  ],
+  "settings": {
+    "index": {
+      "codec.compression_level": "3",
+      "codec": "zstd"
+    }
+  },
+  "mappings": {},
+  "aliases": {}
+}

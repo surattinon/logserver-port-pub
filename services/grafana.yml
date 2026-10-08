@@ -1,0 +1,33 @@
+services:
+  grafana:
+    image: "grafana/grafana-oss:${GF_VERSION}"
+    container_name: "grafana-app-${ENV}"
+    restart: unless-stopped
+    ports:
+      - '0.0.0.0:3000:3000'
+    networks:
+      - "logserver_net"
+    environment:
+      - GF_SERVER_DOMAIN=${GF_SERVER_DOMAIN}
+      - GF_SERVER_ROOT_URL=${GF_SERVER_ROOT_URL}
+      - GF_SECURITY_ADMIN_USER=${GF_SECURITY_ADMIN_USER}
+      - GF_SECURITY_ADMIN_PASSWORD=${GF_SECURITY_ADMIN_PASSWORD}
+      - GF_TEAMS_CRITICAL_WEBHOOK_URL=${GF_TEAMS_CRITICAL_WEBHOOK_URL}
+      - GF_TEAMS_WARNING_WEBHOOK_URL=${GF_TEAMS_WARNING_WEBHOOK_URL}
+      - GF_PLUGINS_PREINSTALL=grafana-opensearch-datasource
+      - TZ=Asia/Bangkok
+    volumes:
+      - "${GF_DATA_PATH}:/var/lib/grafana"
+      - "${GF_PROVISIONING_PATH}:/etc/grafana/provisioning"
+    deploy:
+      resources:
+        limits: { memory: 1g, cpus: '1.0' }
+        reservations: { memory: 256m }
+    healthcheck:
+      test: 
+        - "CMD-SHELL"
+        - "wget -q --spider http://127.0.0.1:3000/api/health || exit 1"
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s

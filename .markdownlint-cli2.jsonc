@@ -1,0 +1,16 @@
+// markdownlint-cli2 config for tasco-logserver — lenient.
+// Catches real structural problems while tolerating the formatting style of
+// long operational runbooks (long lines, repeated section headings, inline HTML).
+{
+  "config": {
+    "default": true,
+    "MD013": false,                    // line length — runbooks have long lines/tables
+    "MD033": false,                    // inline HTML — used for callouts/badges
+    "MD041": false,                    // first line need not be a top-level heading
+    "MD024": { "siblings_only": true }, // allow repeated headings (e.g. "Validate") across sections
+    "MD040": false,                    // fenced code language tag optional
+    "MD036": false                     // emphasis-as-heading tolerated
+  },
+  "globs": ["**/*.md"],
+  "ignores": ["node_modules/**", ".git/**"]
+}

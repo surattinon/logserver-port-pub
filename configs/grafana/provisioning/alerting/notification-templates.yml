@@ -1,0 +1,83 @@
+apiVersion: 1
+templates:
+  - orgId: 1
+    name: tipco-firewall-alerts
+    template: |
+      {{/* ================================================
+      TIPCO Firewall Alert Templates
+      Covers: threat, repeated_deny alert types
+      Devices: Palo Alto, WatchGuard
+      ================================================ */}}
+
+      {{/* ── Helper: Severity icon ── */}}
+      {{ define "tipco.severity_icon" -}}
+        {{- if eq . "critical" }}🔴
+        {{- else if eq . "high" }}⚠️
+        {{- else if eq . "medium" }}🟡
+        {{- else }}🔵{{ end -}}
+      {{- end }}
+
+      {{/* ── Helper: Device icon ── */}}
+      {{ define "tipco.device_icon" -}}
+        {{- if eq . "PaloAlto" }}🛡️ Palo Alto
+        {{- else if eq . "WatchGuard" }}🔒 WatchGuard
+        {{- else }}🖥️ {{ . }}{{ end -}}
+      {{- end }}
+
+      {{/* ── Helper: Status icon ── */}}
+      {{ define "tipco.status_icon" -}}
+        {{- if eq . "firing" }}🚨{{ else }}✅{{ end -}}
+      {{- end }}
+
+      {{/* TITLE — used in contact point Title field */}}
+      {{ define "tipco.title" -}}
+      {{ template "tipco.status_icon" .Status }}
+      [{{ .Status | toUpper }}]
+      {{- if eq (index .CommonLabels "alert_type") "repeated_deny" }} REPEATED DENY ATTACK
+      {{- else if eq (index .CommonLabels "alert_type") "threat" }} {{ index .CommonLabels "severity" | toUpper }} THREAT DETECTED
+      {{- else }} FIREWALL ALERT
+      {{- end }} [ {{ index .CommonLabels "device_alias" }} ]
+      {{- end }}
+
+      {{ define "tipco.message" }}
+      🚨 FIRING - {{ len .Alerts.Firing }} alert(s)
+      {{ range .Alerts.Firing }}
+
+      {{- $type := index .Labels "alert_type" }}
+
+      {{/* THREAT alert block */}}
+      {{- if or (eq $type "threat.critical") (eq $type "threat.high") }}
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━
+      {{ template "tipco.severity_icon" (index .Labels "severity") }} THREAT DETECTED
+      Device    : {{ template "tipco.device_icon" (index .Labels "device_alias") }}
+      Severity  : {{ index .Labels "severity" | toUpper }}
+      Summary   : {{ index .Annotations "summary" }}
+      Time      : {{ .StartsAt.Format "2006-01-02 15:04:05 UTC" }}
+      Dashboard  : {{ index .Annotations "runbook_url" }}
+
+      {{/* REPEATED DENY alert block */}}
+      {{- else if or (eq $type "deny.repeated") (eq $type "deny.spike") }}
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━
+      📈 DENY {{ if eq $type "deny.repeated" }}REPEATED ATTACK{{ else }}RATE SPIKE{{ end }}
+      Device   : {{ template "tipco.device_icon" (index .Labels "device_alias") }}
+      {{ if eq $type "deny.repeated" -}}
+      Src IP   : {{ index .Labels "src_ip" }}
+      Dst IP   : {{ index .Labels "dst_ip" }}
+      Dst Port : {{ index .Labels "dst_port" }}
+      {{ end -}}
+      Severity : {{ index .Labels "severity" | toUpper }}
+      Summary  : {{ index .Annotations "summary" }}
+      Time     : {{ .StartsAt.Format "2006-01-02 15:04:05 UTC" }}
+      Dashboard: {{ index .Annotations "runbook_url" }}
+
+      {{/* HEALTH alert block */}}
+      {{- else if or (eq $type "health.log_gap") (eq $type "health.high_volume") }}
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━
+      🔧 SYSTEM HEALTH ALERT
+      Device   : {{ index .Annotations "device_alias" }}
+      Issue    : {{ index .Annotations "summary" }}
+      Time     : {{ .StartsAt.Format "2006-01-02 15:04:05 UTC" }}
+
+      {{- end }}
+      {{ end }}
+      {{ end }}

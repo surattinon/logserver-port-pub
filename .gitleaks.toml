@@ -1,0 +1,18 @@
+# gitleaks configuration for tasco-logserver
+# Auto-detected at repo root. Extends the built-in default ruleset
+# (100+ patterns: AWS keys, GitHub PATs, Slack/Teams webhooks, SSH keys, etc.)
+# and adds an allowlist for files that only ever contain placeholders.
+
+title = "tasco-logserver gitleaks config"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Files that contain placeholder values only, never real secrets"
+paths = [
+    '''\.env\.example$''',     # template — values are <PLACEHOLDERS>, not real
+    '''\.gitleaks\.toml$''',   # this config file itself
+]
+# NOTE: do NOT allowlist .env.prod here. It must never be committed at all;
+# .gitignore blocks it and the scanner should flag it loudly if it ever appears.

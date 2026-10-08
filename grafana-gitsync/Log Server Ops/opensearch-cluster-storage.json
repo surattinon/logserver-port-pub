@@ -1,0 +1,354 @@
+{
+  "apiVersion": "dashboard.grafana.app/v2",
+  "kind": "Dashboard",
+  "metadata": {
+    "name": "tasco-d4-opensearch"
+  },
+  "spec": {
+    "annotations": [
+      {
+        "kind": "AnnotationQuery",
+        "spec": {
+          "builtIn": true,
+          "enable": true,
+          "hide": true,
+          "iconColor": "rgba(0, 211, 255, 1)",
+          "name": "Annotations & Alerts",
+          "query": {
+            "datasource": { "name": "grafana" },
+            "group": "grafana",
+            "kind": "DataQuery",
+            "spec": { "limit": 100, "matchAny": false, "tags": [], "type": "dashboard" },
+            "version": "v0"
+          }
+        }
+      }
+    ],
+    "cursorSync": "Crosshair",
+    "description": "OpenSearch cluster health, JVM/heap, indexing and search throughput, per-index-set storage, disk headroom vs watermarks, and snapshot repository usage. Fed by the opensearch-prometheus-exporter 2.19.5.0.",
+    "editable": true,
+    "elements": {
+      "panel-1": {
+        "kind": "Panel",
+        "spec": {
+          "data": { "kind": "QueryGroup", "spec": { "queries": [
+            { "kind": "PanelQuery", "spec": { "hidden": false, "query": {
+              "datasource": { "name": "ds-prometheus-host-metrics" }, "group": "prometheus", "kind": "DataQuery",
+              "spec": { "editorMode": "code", "expr": "opensearch_cluster_status", "format": "time_series", "instant": true, "legendFormat": "cluster", "range": false },
+              "version": "v0" }, "refId": "A" } }
+          ], "queryOptions": {}, "transformations": [] } },
+          "description": "0 = green, 1 = yellow, 2 = red.",
+          "id": 1, "links": [], "title": "Cluster Status",
+          "vizConfig": { "group": "stat", "kind": "VizConfig", "spec": {
+            "fieldConfig": { "defaults": {
+              "color": { "mode": "thresholds" },
+              "mappings": [ { "type": "value", "options": {
+                "0": { "color": "green", "index": 0, "text": "GREEN" },
+                "1": { "color": "yellow", "index": 1, "text": "YELLOW" },
+                "2": { "color": "red", "index": 2, "text": "RED" } } } ],
+              "thresholds": { "mode": "absolute", "steps": [ { "color": "green", "value": null }, { "color": "yellow", "value": 1 }, { "color": "red", "value": 2 } ] },
+              "unit": "none" }, "overrides": [] },
+            "options": { "colorMode": "background", "graphMode": "none", "justifyMode": "auto", "orientation": "auto", "percentChangeColorMode": "standard", "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false }, "showPercentChange": false, "textMode": "value", "wideLayout": true },
+            "version": "13.0.1+security-01" } }
+        }
+      },
+      "panel-2": {
+        "kind": "Panel",
+        "spec": {
+          "data": { "kind": "QueryGroup", "spec": { "queries": [
+            { "kind": "PanelQuery", "spec": { "hidden": false, "query": {
+              "datasource": { "name": "ds-prometheus-host-metrics" }, "group": "prometheus", "kind": "DataQuery",
+              "spec": { "editorMode": "code", "expr": "opensearch_cluster_shards_active_percent", "format": "time_series", "instant": true, "legendFormat": "active", "range": false },
+              "version": "v0" }, "refId": "A" } }
+          ], "queryOptions": {}, "transformations": [] } },
+          "description": "Percent of shards active. Below 100 = unassigned/initializing shards.",
+          "id": 2, "links": [], "title": "Active Shards %",
+          "vizConfig": { "group": "stat", "kind": "VizConfig", "spec": {
+            "fieldConfig": { "defaults": {
+              "color": { "mode": "thresholds" }, "decimals": 1, "mappings": [],
+              "thresholds": { "mode": "absolute", "steps": [ { "color": "red", "value": null }, { "color": "yellow", "value": 99 }, { "color": "green", "value": 100 } ] },
+              "unit": "percent" }, "overrides": [] },
+            "options": { "colorMode": "background", "graphMode": "none", "justifyMode": "auto", "orientation": "auto", "percentChangeColorMode": "standard", "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false }, "showPercentChange": false, "textMode": "value", "wideLayout": true },
+            "version": "13.0.1+security-01" } }
+        }
+      },
+      "panel-3": {
+        "kind": "Panel",
+        "spec": {
+          "data": { "kind": "QueryGroup", "spec": { "queries": [
+            { "kind": "PanelQuery", "spec": { "hidden": false, "query": {
+              "datasource": { "name": "ds-prometheus-host-metrics" }, "group": "prometheus", "kind": "DataQuery",
+              "spec": { "editorMode": "code", "expr": "opensearch_cluster_pending_tasks_number", "format": "time_series", "instant": true, "legendFormat": "pending", "range": false },
+              "version": "v0" }, "refId": "A" } }
+          ], "queryOptions": {}, "transformations": [] } },
+          "description": "Cluster-level pending tasks. Sustained > 0 indicates the cluster is struggling to apply state updates.",
+          "id": 3, "links": [], "title": "Pending Tasks",
+          "vizConfig": { "group": "stat", "kind": "VizConfig", "spec": {
+            "fieldConfig": { "defaults": {
+              "color": { "mode": "thresholds" }, "mappings": [],
+              "thresholds": { "mode": "absolute", "steps": [ { "color": "green", "value": null }, { "color": "yellow", "value": 1 }, { "color": "red", "value": 50 } ] },
+              "unit": "short" }, "overrides": [] },
+            "options": { "colorMode": "value", "graphMode": "area", "justifyMode": "auto", "orientation": "auto", "percentChangeColorMode": "standard", "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false }, "showPercentChange": false, "textMode": "value", "wideLayout": true },
+            "version": "13.0.1+security-01" } }
+        }
+      },
+      "panel-4": {
+        "kind": "Panel",
+        "spec": {
+          "data": { "kind": "QueryGroup", "spec": { "queries": [
+            { "kind": "PanelQuery", "spec": { "hidden": false, "query": {
+              "datasource": { "name": "ds-prometheus-host-metrics" }, "group": "prometheus", "kind": "DataQuery",
+              "spec": { "editorMode": "code", "expr": "opensearch_jvm_mem_heap_used_percent", "format": "time_series", "instant": true, "legendFormat": "heap", "range": false },
+              "version": "v0" }, "refId": "A" } }
+          ], "queryOptions": {}, "transformations": [] } },
+          "description": "JVM heap used %. Sustained > 85 risks GC pressure and circuit-breaker trips.",
+          "id": 4, "links": [], "title": "Heap Used %",
+          "vizConfig": { "group": "gauge", "kind": "VizConfig", "spec": {
+            "fieldConfig": { "defaults": {
+              "color": { "mode": "thresholds" }, "decimals": 1, "max": 100, "min": 0,
+              "thresholds": { "mode": "absolute", "steps": [ { "color": "green", "value": null }, { "color": "yellow", "value": 75 }, { "color": "red", "value": 85 } ] },
+              "unit": "percent" }, "overrides": [] },
+            "options": { "minVizHeight": 75, "minVizWidth": 75, "orientation": "auto", "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false }, "showThresholdLabels": false, "showThresholdMarkers": true },
+            "version": "13.0.1+security-01" } }
+        }
+      },
+      "panel-5": {
+        "kind": "Panel",
+        "spec": {
+          "data": { "kind": "QueryGroup", "spec": { "queries": [
+            { "kind": "PanelQuery", "spec": { "hidden": false, "query": {
+              "datasource": { "name": "ds-prometheus-host-metrics" }, "group": "prometheus", "kind": "DataQuery",
+              "spec": { "editorMode": "code", "expr": "rate(opensearch_indices_indexing_index_count[$__rate_interval])", "format": "time_series", "legendFormat": "Indexed docs/s", "range": true },
+              "version": "v0" }, "refId": "A" } },
+            { "kind": "PanelQuery", "spec": { "hidden": false, "query": {
+              "datasource": { "name": "ds-prometheus-host-metrics" }, "group": "prometheus", "kind": "DataQuery",
+              "spec": { "editorMode": "code", "expr": "rate(opensearch_indices_indexing_index_failed_count[$__rate_interval])", "format": "time_series", "legendFormat": "Failed/s", "range": true },
+              "version": "v0" }, "refId": "B" } }
+          ], "queryOptions": {}, "transformations": [] } },
+          "description": "Node-level indexing throughput and failures.",
+          "id": 5, "links": [], "title": "Indexing Rate & Failures",
+          "vizConfig": { "group": "timeseries", "kind": "VizConfig", "spec": {
+            "fieldConfig": { "defaults": {
+              "color": { "mode": "palette-classic" },
+              "custom": { "axisBorderShow": false, "axisCenteredZero": false, "axisColorMode": "text", "axisLabel": "", "axisPlacement": "auto", "barAlignment": 0, "drawStyle": "line", "fillOpacity": 10, "gradientMode": "none", "hideFrom": { "legend": false, "tooltip": false, "viz": false }, "insertNulls": false, "lineInterpolation": "linear", "lineWidth": 1, "pointSize": 5, "scaleDistribution": { "type": "linear" }, "showPoints": "auto", "spanNulls": false, "stacking": { "group": "A", "mode": "none" }, "thresholdsStyle": { "mode": "off" } },
+              "mappings": [], "min": 0,
+              "thresholds": { "mode": "absolute", "steps": [ { "color": "green", "value": null } ] }, "unit": "short" },
+              "overrides": [ { "matcher": { "id": "byName", "options": "Failed/s" }, "properties": [ { "id": "color", "value": { "fixedColor": "red", "mode": "fixed" } } ] } ] },
+            "options": { "legend": { "calcs": ["mean", "max", "lastNotNull"], "displayMode": "table", "placement": "bottom", "showLegend": true }, "tooltip": { "hideZeros": false, "mode": "multi", "sort": "desc" } },
+            "version": "13.0.1+security-01" } }
+        }
+      },
+      "panel-6": {
+        "kind": "Panel",
+        "spec": {
+          "data": { "kind": "QueryGroup", "spec": { "queries": [
+            { "kind": "PanelQuery", "spec": { "hidden": false, "query": {
+              "datasource": { "name": "ds-prometheus-host-metrics" }, "group": "prometheus", "kind": "DataQuery",
+              "spec": { "editorMode": "code", "expr": "rate(opensearch_indices_search_query_count[$__rate_interval])", "format": "time_series", "legendFormat": "Queries/s", "range": true },
+              "version": "v0" }, "refId": "A" } },
+            { "kind": "PanelQuery", "spec": { "hidden": false, "query": {
+              "datasource": { "name": "ds-prometheus-host-metrics" }, "group": "prometheus", "kind": "DataQuery",
+              "spec": { "editorMode": "code", "expr": "rate(opensearch_indices_search_query_time_seconds[$__rate_interval]) / clamp_min(rate(opensearch_indices_search_query_count[$__rate_interval]), 1) * 1000", "format": "time_series", "legendFormat": "Latency (ms)", "range": true },
+              "version": "v0" }, "refId": "B" } }
+          ], "queryOptions": {}, "transformations": [] } },
+          "description": "Search query rate and average query latency (ms).",
+          "id": 6, "links": [], "title": "Search Rate & Latency",
+          "vizConfig": { "group": "timeseries", "kind": "VizConfig", "spec": {
+            "fieldConfig": { "defaults": {
+              "color": { "mode": "palette-classic" },
+              "custom": { "axisBorderShow": false, "axisCenteredZero": false, "axisColorMode": "text", "axisLabel": "", "axisPlacement": "auto", "barAlignment": 0, "drawStyle": "line", "fillOpacity": 10, "gradientMode": "none", "hideFrom": { "legend": false, "tooltip": false, "viz": false }, "insertNulls": false, "lineInterpolation": "linear", "lineWidth": 1, "pointSize": 5, "scaleDistribution": { "type": "linear" }, "showPoints": "auto", "spanNulls": false, "stacking": { "group": "A", "mode": "none" }, "thresholdsStyle": { "mode": "off" } },
+              "mappings": [], "min": 0,
+              "thresholds": { "mode": "absolute", "steps": [ { "color": "green", "value": null } ] }, "unit": "short" },
+              "overrides": [ { "matcher": { "id": "byName", "options": "Latency (ms)" }, "properties": [ { "id": "unit", "value": "ms" }, { "id": "custom.axisPlacement", "value": "right" } ] } ] },
+            "options": { "legend": { "calcs": ["mean", "max", "lastNotNull"], "displayMode": "table", "placement": "bottom", "showLegend": true }, "tooltip": { "hideZeros": false, "mode": "multi", "sort": "desc" } },
+            "version": "13.0.1+security-01" } }
+        }
+      },
+      "panel-7": {
+        "kind": "Panel",
+        "spec": {
+          "data": { "kind": "QueryGroup", "spec": { "queries": [
+            { "kind": "PanelQuery", "spec": { "hidden": false, "query": {
+              "datasource": { "name": "ds-prometheus-host-metrics" }, "group": "prometheus", "kind": "DataQuery",
+              "spec": { "editorMode": "code", "expr": "rate(opensearch_jvm_gc_collection_time_seconds[$__rate_interval])", "format": "time_series", "legendFormat": "{{gc}}", "range": true },
+              "version": "v0" }, "refId": "A" } }
+          ], "queryOptions": {}, "transformations": [] } },
+          "description": "Fraction of wall-clock time spent in JVM garbage collection per collector. Rising 'old' GC time is an early heap-pressure signal.",
+          "id": 7, "links": [], "title": "GC Time",
+          "vizConfig": { "group": "timeseries", "kind": "VizConfig", "spec": {
+            "fieldConfig": { "defaults": {
+              "color": { "mode": "palette-classic" },
+              "custom": { "axisBorderShow": false, "axisCenteredZero": false, "axisColorMode": "text", "axisLabel": "", "axisPlacement": "auto", "barAlignment": 0, "drawStyle": "line", "fillOpacity": 10, "gradientMode": "none", "hideFrom": { "legend": false, "tooltip": false, "viz": false }, "insertNulls": false, "lineInterpolation": "linear", "lineWidth": 1, "pointSize": 5, "scaleDistribution": { "type": "linear" }, "showPoints": "auto", "spanNulls": false, "stacking": { "group": "A", "mode": "none" }, "thresholdsStyle": { "mode": "off" } },
+              "mappings": [], "min": 0,
+              "thresholds": { "mode": "absolute", "steps": [ { "color": "green", "value": null } ] }, "unit": "percentunit" }, "overrides": [] },
+            "options": { "legend": { "calcs": ["mean", "max"], "displayMode": "table", "placement": "bottom", "showLegend": true }, "tooltip": { "hideZeros": false, "mode": "multi", "sort": "desc" } },
+            "version": "13.0.1+security-01" } }
+        }
+      },
+      "panel-8": {
+        "kind": "Panel",
+        "spec": {
+          "data": { "kind": "QueryGroup", "spec": { "queries": [
+            { "kind": "PanelQuery", "spec": { "hidden": false, "query": { "datasource": { "name": "ds-prometheus-host-metrics" }, "group": "prometheus", "kind": "DataQuery",
+              "spec": { "editorMode": "code", "expr": "sum(opensearch_index_store_size_bytes{context=\"primaries\", index=~\"pan_os_logs_.*\"})", "format": "time_series", "instant": true, "legendFormat": "pan_os_logs", "range": false }, "version": "v0" }, "refId": "A" } },
+            { "kind": "PanelQuery", "spec": { "hidden": false, "query": { "datasource": { "name": "ds-prometheus-host-metrics" }, "group": "prometheus", "kind": "DataQuery",
+              "spec": { "editorMode": "code", "expr": "sum(opensearch_index_store_size_bytes{context=\"primaries\", index=~\"watchguard_logs_.*\"})", "format": "time_series", "instant": true, "legendFormat": "watchguard_logs", "range": false }, "version": "v0" }, "refId": "B" } },
+            { "kind": "PanelQuery", "spec": { "hidden": false, "query": { "datasource": { "name": "ds-prometheus-host-metrics" }, "group": "prometheus", "kind": "DataQuery",
+              "spec": { "editorMode": "code", "expr": "sum(opensearch_index_store_size_bytes{context=\"primaries\", index=~\"syslog_transit_.*\"})", "format": "time_series", "instant": true, "legendFormat": "syslog_transit", "range": false }, "version": "v0" }, "refId": "C" } }
+          ], "queryOptions": {}, "transformations": [] } },
+          "description": "On-disk primary store size per index set.",
+          "id": 8, "links": [], "title": "Index-Set Size (primaries)",
+          "vizConfig": { "group": "bargauge", "kind": "VizConfig", "spec": {
+            "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "mappings": [], "thresholds": { "mode": "absolute", "steps": [ { "color": "super-light-blue", "value": null } ] }, "unit": "bytes" }, "overrides": [] },
+            "options": { "displayMode": "gradient", "maxVizHeight": 300, "minVizHeight": 16, "minVizWidth": 8, "namePlacement": "auto", "orientation": "horizontal", "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false }, "showUnfilled": true, "sizing": "auto", "valueMode": "color" },
+            "version": "13.0.1+security-01" } }
+        }
+      },
+      "panel-9": {
+        "kind": "Panel",
+        "spec": {
+          "data": { "kind": "QueryGroup", "spec": { "queries": [
+            { "kind": "PanelQuery", "spec": { "hidden": false, "query": { "datasource": { "name": "ds-prometheus-host-metrics" }, "group": "prometheus", "kind": "DataQuery",
+              "spec": { "editorMode": "code", "expr": "sum(opensearch_index_store_size_bytes{context=\"primaries\", index=~\"pan_os_logs_.*\"})", "format": "time_series", "legendFormat": "pan_os_logs", "range": true }, "version": "v0" }, "refId": "A" } },
+            { "kind": "PanelQuery", "spec": { "hidden": false, "query": { "datasource": { "name": "ds-prometheus-host-metrics" }, "group": "prometheus", "kind": "DataQuery",
+              "spec": { "editorMode": "code", "expr": "sum(opensearch_index_store_size_bytes{context=\"primaries\", index=~\"watchguard_logs_.*\"})", "format": "time_series", "legendFormat": "watchguard_logs", "range": true }, "version": "v0" }, "refId": "B" } },
+            { "kind": "PanelQuery", "spec": { "hidden": false, "query": { "datasource": { "name": "ds-prometheus-host-metrics" }, "group": "prometheus", "kind": "DataQuery",
+              "spec": { "editorMode": "code", "expr": "sum(opensearch_index_store_size_bytes{context=\"primaries\", index=~\"syslog_transit_.*\"})", "format": "time_series", "legendFormat": "syslog_transit", "range": true }, "version": "v0" }, "refId": "C" } }
+          ], "queryOptions": {}, "transformations": [] } },
+          "description": "Store size trend per index set. The slope is your daily fill rate and feeds the runway estimate.",
+          "id": 9, "links": [], "title": "Index-Set Growth",
+          "vizConfig": { "group": "timeseries", "kind": "VizConfig", "spec": {
+            "fieldConfig": { "defaults": {
+              "color": { "mode": "palette-classic" },
+              "custom": { "axisBorderShow": false, "axisCenteredZero": false, "axisColorMode": "text", "axisLabel": "", "axisPlacement": "auto", "barAlignment": 0, "drawStyle": "line", "fillOpacity": 10, "gradientMode": "none", "hideFrom": { "legend": false, "tooltip": false, "viz": false }, "insertNulls": false, "lineInterpolation": "linear", "lineWidth": 1, "pointSize": 5, "scaleDistribution": { "type": "linear" }, "showPoints": "auto", "spanNulls": false, "stacking": { "group": "A", "mode": "none" }, "thresholdsStyle": { "mode": "off" } },
+              "mappings": [], "min": 0,
+              "thresholds": { "mode": "absolute", "steps": [ { "color": "green", "value": null } ] }, "unit": "bytes" }, "overrides": [] },
+            "options": { "legend": { "calcs": ["last", "max"], "displayMode": "table", "placement": "bottom", "showLegend": true }, "tooltip": { "hideZeros": false, "mode": "multi", "sort": "desc" } },
+            "version": "13.0.1+security-01" } }
+        }
+      },
+      "panel-10": {
+        "kind": "Panel",
+        "spec": {
+          "data": { "kind": "QueryGroup", "spec": { "queries": [
+            { "kind": "PanelQuery", "spec": { "hidden": false, "query": { "datasource": { "name": "ds-prometheus-host-metrics" }, "group": "prometheus", "kind": "DataQuery",
+              "spec": { "editorMode": "code", "expr": "100 - (node_filesystem_avail_bytes{job=\"node\", mountpoint=\"/data/opensearch\"} / node_filesystem_size_bytes{job=\"node\", mountpoint=\"/data/opensearch\"} * 100)", "format": "time_series", "legendFormat": "vDisk1 used %", "range": true }, "version": "v0" }, "refId": "A" } }
+          ], "queryOptions": {}, "transformations": [] } },
+          "description": "vDisk 1 (/data/opensearch) used %, with watermark lines at 85 / 90 / 95.",
+          "id": 10, "links": [], "title": "Data Disk Headroom vs Watermarks",
+          "vizConfig": { "group": "timeseries", "kind": "VizConfig", "spec": {
+            "fieldConfig": { "defaults": {
+              "color": { "mode": "thresholds" },
+              "custom": { "axisBorderShow": false, "axisCenteredZero": false, "axisColorMode": "text", "axisLabel": "", "axisPlacement": "auto", "barAlignment": 0, "drawStyle": "line", "fillOpacity": 10, "gradientMode": "none", "hideFrom": { "legend": false, "tooltip": false, "viz": false }, "insertNulls": false, "lineInterpolation": "linear", "lineWidth": 2, "pointSize": 5, "scaleDistribution": { "type": "linear" }, "showPoints": "auto", "spanNulls": false, "stacking": { "group": "A", "mode": "none" }, "thresholdsStyle": { "mode": "line" } },
+              "mappings": [], "max": 100, "min": 0,
+              "thresholds": { "mode": "absolute", "steps": [ { "color": "green", "value": null }, { "color": "yellow", "value": 85 }, { "color": "orange", "value": 90 }, { "color": "red", "value": 95 } ] }, "unit": "percent" }, "overrides": [] },
+            "options": { "legend": { "calcs": ["lastNotNull", "max"], "displayMode": "table", "placement": "bottom", "showLegend": true }, "tooltip": { "hideZeros": false, "mode": "single", "sort": "none" } },
+            "version": "13.0.1+security-01" } }
+        }
+      },
+      "panel-11": {
+        "kind": "Panel",
+        "spec": {
+          "data": { "kind": "QueryGroup", "spec": { "queries": [
+            { "kind": "PanelQuery", "spec": { "hidden": false, "query": { "datasource": { "name": "ds-prometheus-host-metrics" }, "group": "prometheus", "kind": "DataQuery",
+              "spec": { "editorMode": "code", "expr": "node_filesystem_avail_bytes{job=\"node\", mountpoint=\"/data/opensearch\"} / clamp_min(deriv(node_filesystem_avail_bytes{job=\"node\", mountpoint=\"/data/opensearch\"}[6h]) * -1, 1) / 86400", "format": "time_series", "instant": true, "legendFormat": "days", "range": false }, "version": "v0" }, "refId": "A" } }
+          ], "queryOptions": {}, "transformations": [] } },
+          "description": "Estimated days until vDisk 1 is full, based on the last 6h fill rate. Reads very high when the disk is not filling (or freeing). Needs >6h of history to stabilise.",
+          "id": 11, "links": [], "title": "Days to Full — vDisk 1 (est.)",
+          "vizConfig": { "group": "stat", "kind": "VizConfig", "spec": {
+            "fieldConfig": { "defaults": {
+              "color": { "mode": "thresholds" }, "decimals": 0, "mappings": [],
+              "thresholds": { "mode": "absolute", "steps": [ { "color": "red", "value": null }, { "color": "orange", "value": 14 }, { "color": "green", "value": 30 } ] },
+              "unit": "none" }, "overrides": [] },
+            "options": { "colorMode": "background", "graphMode": "none", "justifyMode": "auto", "orientation": "auto", "percentChangeColorMode": "standard", "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false }, "showPercentChange": false, "textMode": "value", "wideLayout": true },
+            "version": "13.0.1+security-01" } }
+        }
+      },
+      "panel-12": {
+        "kind": "Panel",
+        "spec": {
+          "data": { "kind": "QueryGroup", "spec": { "queries": [
+            { "kind": "PanelQuery", "spec": { "hidden": false, "query": { "datasource": { "name": "ds-prometheus-host-metrics" }, "group": "prometheus", "kind": "DataQuery",
+              "spec": { "editorMode": "code", "expr": "100 - (node_filesystem_avail_bytes{job=\"node\", mountpoint=~\"/data/opensearch-snapshots?\"} / node_filesystem_size_bytes{job=\"node\", mountpoint=~\"/data/opensearch-snapshots?\"} * 100)", "format": "time_series", "instant": true, "legendFormat": "vDisk4 snapshots", "range": false }, "version": "v0" }, "refId": "A" } }
+          ], "queryOptions": {}, "transformations": [] } },
+          "description": "Snapshot repository (vDisk 4, 350 GB) used %. Should sit well under the ~150 GiB / 7-day snapshot scope. Mount uses a regex to tolerate the singular/plural spelling in the repo.",
+          "id": 12, "links": [], "title": "Snapshot Repo Usage",
+          "vizConfig": { "group": "bargauge", "kind": "VizConfig", "spec": {
+            "fieldConfig": { "defaults": {
+              "color": { "mode": "thresholds" }, "decimals": 1, "mappings": [], "max": 100, "min": 0,
+              "thresholds": { "mode": "absolute", "steps": [ { "color": "green", "value": null }, { "color": "yellow", "value": 80 }, { "color": "red", "value": 90 } ] },
+              "unit": "percent" }, "overrides": [] },
+            "options": { "displayMode": "gradient", "maxVizHeight": 300, "minVizHeight": 16, "minVizWidth": 8, "namePlacement": "auto", "orientation": "horizontal", "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false }, "showUnfilled": true, "sizing": "auto", "valueMode": "color" },
+            "version": "13.0.1+security-01" } }
+        }
+      }
+    },
+    "layout": {
+      "kind": "RowsLayout",
+      "spec": {
+        "rows": [
+          {
+            "kind": "RowsLayoutRow",
+            "spec": {
+              "collapse": false, "title": "Cluster Health",
+              "layout": { "kind": "GridLayout", "spec": { "items": [
+                { "kind": "GridLayoutItem", "spec": { "element": { "kind": "ElementReference", "name": "panel-1" }, "height": 5, "width": 6, "x": 0, "y": 0 } },
+                { "kind": "GridLayoutItem", "spec": { "element": { "kind": "ElementReference", "name": "panel-2" }, "height": 5, "width": 6, "x": 6, "y": 0 } },
+                { "kind": "GridLayoutItem", "spec": { "element": { "kind": "ElementReference", "name": "panel-3" }, "height": 5, "width": 6, "x": 12, "y": 0 } },
+                { "kind": "GridLayoutItem", "spec": { "element": { "kind": "ElementReference", "name": "panel-4" }, "height": 5, "width": 6, "x": 18, "y": 0 } }
+              ] } }
+            }
+          },
+          {
+            "kind": "RowsLayoutRow",
+            "spec": {
+              "collapse": false, "title": "Throughput & JVM",
+              "layout": { "kind": "GridLayout", "spec": { "items": [
+                { "kind": "GridLayoutItem", "spec": { "element": { "kind": "ElementReference", "name": "panel-5" }, "height": 8, "width": 8, "x": 0, "y": 0 } },
+                { "kind": "GridLayoutItem", "spec": { "element": { "kind": "ElementReference", "name": "panel-6" }, "height": 8, "width": 8, "x": 8, "y": 0 } },
+                { "kind": "GridLayoutItem", "spec": { "element": { "kind": "ElementReference", "name": "panel-7" }, "height": 8, "width": 8, "x": 16, "y": 0 } }
+              ] } }
+            }
+          },
+          {
+            "kind": "RowsLayoutRow",
+            "spec": {
+              "collapse": false, "title": "Storage",
+              "layout": { "kind": "GridLayout", "spec": { "items": [
+                { "kind": "GridLayoutItem", "spec": { "element": { "kind": "ElementReference", "name": "panel-8" }, "height": 8, "width": 12, "x": 0, "y": 0 } },
+                { "kind": "GridLayoutItem", "spec": { "element": { "kind": "ElementReference", "name": "panel-9" }, "height": 8, "width": 12, "x": 12, "y": 0 } }
+              ] } }
+            }
+          },
+          {
+            "kind": "RowsLayoutRow",
+            "spec": {
+              "collapse": false, "title": "Disk & Runway",
+              "layout": { "kind": "GridLayout", "spec": { "items": [
+                { "kind": "GridLayoutItem", "spec": { "element": { "kind": "ElementReference", "name": "panel-10" }, "height": 8, "width": 10, "x": 0, "y": 0 } },
+                { "kind": "GridLayoutItem", "spec": { "element": { "kind": "ElementReference", "name": "panel-11" }, "height": 8, "width": 6, "x": 10, "y": 0 } },
+                { "kind": "GridLayoutItem", "spec": { "element": { "kind": "ElementReference", "name": "panel-12" }, "height": 8, "width": 8, "x": 16, "y": 0 } }
+              ] } }
+            }
+          }
+        ]
+      }
+    },
+    "links": [],
+    "liveNow": false,
+    "preferences": { "layout": { "kind": "GridLayout", "spec": { "items": [] } } },
+    "preload": false,
+    "tags": ["tasco", "logserver", "opensearch"],
+    "timeSettings": {
+      "autoRefresh": "1m",
+      "autoRefreshIntervals": ["5s", "10s", "30s", "1m", "5m", "15m", "30m", "1h", "2h", "1d"],
+      "fiscalYearStartMonth": 0,
+      "from": "now-24h",
+      "hideTimepicker": false,
+      "timezone": "browser",
+      "to": "now"
+    },
+    "title": "OpenSearch Cluster & Storage",
+    "variables": []
+  }
+}

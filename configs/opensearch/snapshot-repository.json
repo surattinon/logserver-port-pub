@@ -1,0 +1,7 @@
+{
+  "type": "fs",
+  "settings": {
+    "location": "/usr/share/opensearch/snapshots",
+    "compress": false
+  }
+}

@@ -1,0 +1,200 @@
+# =========================================================
+# TASCO Centralized Log Server - Git Ignore
+# =========================================================
+
+# -----------------------------
+# Environment / secrets
+# -----------------------------
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# Secret files
+*.secret
+*.secrets
+secrets/
+docker-secrets/
+*.key
+*.pem
+*.p12
+*.pfx
+*.crt
+*.csr
+*.jks
+*.keystore
+*.htpasswd
+*.gpg
+*.age
+
+# Optional secret/config output files
+*_secret*
+*_password*
+*_token*
+credentials*
+credential*
+auth.json
+service-account*.json
+
+
+# -----------------------------
+# Runtime data - DO NOT COMMIT
+# -----------------------------
+data/
+!data/.gitkeep
+!data/**/.gitkeep
+
+# Grafana runtime DB/plugins/cache
+data/grafana/
+grafana.db
+
+# Prometheus TSDB/runtime data
+data/prometheus/
+prometheus_data/
+queries.active
+wal/
+
+
+# -----------------------------
+# Backups / dumps / archives
+# -----------------------------
+backups/
+!backups/.gitkeep
+!backups/**/.gitkeep
+
+*.bak
+*.backup
+*.dump
+*.sql
+*.sql.gz
+*.tar
+*.tar.gz
+*.tgz
+*.zip
+*.7z
+*.rar
+*.gz
+*.bz2
+*.xz
+
+
+# -----------------------------
+# Logs / temporary files
+# -----------------------------
+logs/
+*.log
+*.log.*
+*.out
+*.err
+*.tmp
+*.temp
+*.swp
+*.swo
+*.pid
+
+
+# -----------------------------
+# Docker local overrides
+# -----------------------------
+docker-compose.override.yml
+compose.override.yml
+
+# Keep these tracked:
+# docker-compose.yml
+# services/*.yml
+
+
+# -----------------------------
+# Grafana generated files
+# -----------------------------
+grafana-storage/
+grafana/plugins/
+grafana/png/
+
+
+# -----------------------------
+# Graylog / OpenSearch / Mongo runtime files
+# -----------------------------
+opensearch-data/
+mongodb-data/
+mongo-data/
+graylog-data/
+journal/
+nodes/
+snapshots/
+
+
+# -----------------------------
+# Graylog lookup data caution
+# -----------------------------
+# Keep lookup config/templates if sanitized.
+# Uncomment these if lookup tables contain real device names,
+# hostnames, IP addresses, MAC addresses, customer names, or sites.
+#
+# configs/graylog/lookup/device-info/*.csv
+# configs/graylog/lookup/device-info/*.json
+# configs/graylog/lookup/wg-log-catalogs/*.csv
+# configs/graylog/lookup/wg-log-catalogs/*.json
+
+
+# -----------------------------
+# Generated reports / exports
+# -----------------------------
+exports/
+reports/generated/
+*.html.generated
+*.pdf
+
+
+# -----------------------------
+# OS / editor / IDE files
+# -----------------------------
+.DS_Store
+Thumbs.db
+desktop.ini
+
+.vscode/
+!.vscode/extensions.json
+!.vscode/settings.example.json
+
+.idea/
+*.iml
+
+# Vim / Neovim
+*.swp
+*.swo
+Session.vim
+
+# JetBrains / misc
+*.code-workspace
+
+
+# -----------------------------
+# Python / scripts cache
+# -----------------------------
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+
+
+# -----------------------------
+# Node / frontend tooling if added later
+# -----------------------------
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+
+# -----------------------------
+# Make / build artifacts
+# -----------------------------
+build/
+dist/
+.cache/
+coverage/

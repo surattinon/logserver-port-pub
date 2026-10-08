@@ -1,0 +1,88 @@
+name: Config Validation
+
+# Three independent checks, run in parallel so each shows as its own status:
+#   1. compose-config — docker compose parses with the exact Makefile file set
+#   2. yamllint       — Grafana/Prometheus provisioning YAML is well-formed
+#   3. cron-syntax    — the /etc/cron.d-format cron file has valid field counts
+
+on:
+  push:
+    branches: [dev]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  compose-config:
+    name: docker compose config
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Validate compose with the Makefile file set
+        # Mirrors the Makefile exactly:
+        #   docker compose --env-file .env.<ENV> -f docker-compose.yml \
+        #     -f services/graylog.yml -f services/grafana.yml -f services/prometheus.yml
+        # Uses .env.example as the env file (no secrets) and ENV=ci for the
+        # ${ENV} interpolation in the network name. `config -q` parses without
+        # starting anything; a syntax/reference error fails the job.
+        run: |
+          export ENV=ci
+          docker compose --env-file .env.example \
+            -f docker-compose.yml \
+            -f services/graylog.yml \
+            -f services/grafana.yml \
+            -f services/prometheus.yml \
+            config --quiet
+          echo "compose config OK"
+
+  yamllint:
+    name: yamllint (configs)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Run yamllint
+        # pipx is preinstalled on the runner; `pipx run` fetches + executes
+        # yamllint without polluting the system python.
+        run: pipx run yamllint -c .yamllint.yml configs/
+
+  cron-syntax:
+    name: cron.d syntax
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Validate cron.d field counts
+        # /etc/cron.d format requires 7+ fields per active job line:
+        #   minute hour dom month dow USER command...
+        # (a per-user crontab has 6 — the USER field is what differs).
+        # This is a lightweight structural check, not a full cron parser.
+        run: |
+          FILE=configs/cron/tasco-logserver
+          if [ ! -f "$FILE" ]; then
+            echo "::error::expected cron file not found: $FILE"
+            exit 1
+          fi
+          fail=0
+          while IFS= read -r line; do
+            # skip blank lines
+            [ -z "${line//[[:space:]]/}" ] && continue
+            # skip comments
+            case "$line" in \#*) continue ;; esac
+            # skip env assignments (SHELL=..., PATH=...)
+            case "$line" in [A-Za-z_]*=*) continue ;; esac
+            n=$(printf '%s\n' "$line" | awk '{print NF}')
+            if [ "$n" -lt 7 ]; then
+              echo "::error::cron line has <7 fields (need: m h dom mon dow USER cmd): $line"
+              fail=1
+            fi
+          done < "$FILE"
+          [ "$fail" -eq 0 ] && echo "cron.d syntax OK"
+          exit $fail

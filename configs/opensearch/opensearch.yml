@@ -1,0 +1,32 @@
+# --- Cluster / node identity ---
+cluster.name: graylog
+node.name: opensearch
+
+# --- Single-node mode (also disables bootstrap checks on non-loopback bind) ---
+discovery.type: single-node
+
+# --- Network ---
+network.host: 0.0.0.0
+http.port: 9200
+
+# --- Graylog requirement: never auto-create indices ---
+action.auto_create_index: false
+
+# --- Memory ---
+bootstrap.memory_lock: true
+
+# --- Snapshot repository path (must match the vDisk 4 bind mount destination) ---
+path.repo: /usr/share/opensearch/snapshots
+
+# --- Security plugin disabled (internal network only; no TLS/authn) ---
+plugins.security.disabled: true
+
+# --- Disk-based shard allocation watermarks (config-as-code home for these) ---
+cluster.routing.allocation.disk.threshold_enabled: true
+cluster.routing.allocation.disk.watermark.low: "85%"
+cluster.routing.allocation.disk.watermark.high: "90%"
+cluster.routing.allocation.disk.watermark.flood_stage: "95%"
+
+prometheus.indices: true
+prometheus.indices_filter.selected_indices: "pan_os_logs_*,watchguard_logs_*,syslog_transit_*"
+prometheus.indices_filter.selected_option: "LENIENT_EXPAND_OPEN"

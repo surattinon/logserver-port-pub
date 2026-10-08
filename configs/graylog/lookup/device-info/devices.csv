@@ -1,0 +1,4 @@
+ipaddr,vendor,site,alias
+172.17.88.3,PaloAlto,BKK_HO,"Palo Alto Firewall - HO"
+172.17.9.254,WatchGuard,BKK_HO,"WatchGuard XTM - HO"
+192.168.58.252,WatchGuard,SPK_PPD,"WatchGuard XTM - Phrapradaeng"

@@ -1,0 +1,240 @@
+{
+  "apiVersion": "dashboard.grafana.app/v2",
+  "kind": "Dashboard",
+  "metadata": { "name": "tasco-d2-graylog-pipeline" },
+  "spec": {
+    "annotations": [
+      {
+        "kind": "AnnotationQuery",
+        "spec": {
+          "builtIn": true, "enable": true, "hide": true, "iconColor": "rgba(0, 211, 255, 1)", "name": "Annotations & Alerts",
+          "query": { "datasource": { "name": "grafana" }, "group": "grafana", "kind": "DataQuery", "spec": { "limit": 100, "matchAny": false, "tags": [], "type": "dashboard" }, "version": "v0" }
+        }
+      }
+    ],
+    "cursorSync": "Crosshair",
+    "description": "Graylog ingestion and processing health: input/output throughput, on-disk journal, processing buffers, OpenSearch output, per-stream flow, and timestamp parsing errors. Fed by the Graylog 7.1 native Prometheus exporter (gl_*).",
+    "editable": true,
+    "elements": {
+      "panel-1": {
+        "kind": "Panel",
+        "spec": {
+          "data": { "kind": "QueryGroup", "spec": { "queries": [
+            { "kind": "PanelQuery", "spec": { "hidden": false, "query": { "datasource": { "name": "ds-prometheus-host-metrics" }, "group": "prometheus", "kind": "DataQuery",
+              "spec": { "editorMode": "code", "expr": "gl_input_throughput", "format": "time_series", "legendFormat": "In (msg/s)", "range": true }, "version": "v0" }, "refId": "A" } },
+            { "kind": "PanelQuery", "spec": { "hidden": false, "query": { "datasource": { "name": "ds-prometheus-host-metrics" }, "group": "prometheus", "kind": "DataQuery",
+              "spec": { "editorMode": "code", "expr": "gl_output_throughput", "format": "time_series", "legendFormat": "Out (msg/s)", "range": true }, "version": "v0" }, "refId": "B" } }
+          ], "queryOptions": {}, "transformations": [] } },
+          "description": "Sustained Out < In means Graylog is not writing to OpenSearch as fast as it receives — the journal will grow.",
+          "id": 1, "links": [], "title": "Throughput: In vs Out",
+          "vizConfig": { "group": "timeseries", "kind": "VizConfig", "spec": {
+            "fieldConfig": { "defaults": {
+              "color": { "mode": "palette-classic" },
+              "custom": { "axisBorderShow": false, "axisCenteredZero": false, "axisColorMode": "text", "axisLabel": "", "axisPlacement": "auto", "barAlignment": 0, "drawStyle": "line", "fillOpacity": 10, "gradientMode": "none", "hideFrom": { "legend": false, "tooltip": false, "viz": false }, "insertNulls": false, "lineInterpolation": "linear", "lineWidth": 1, "pointSize": 5, "scaleDistribution": { "type": "linear" }, "showPoints": "auto", "spanNulls": false, "stacking": { "group": "A", "mode": "none" }, "thresholdsStyle": { "mode": "off" } },
+              "mappings": [], "min": 0, "thresholds": { "mode": "absolute", "steps": [ { "color": "green", "value": null } ] }, "unit": "short" }, "overrides": [] },
+            "options": { "legend": { "calcs": ["mean", "max", "lastNotNull"], "displayMode": "table", "placement": "bottom", "showLegend": true }, "tooltip": { "hideZeros": false, "mode": "multi", "sort": "desc" } },
+            "version": "13.0.1+security-01" } }
+        }
+      },
+      "panel-3": {
+        "kind": "Panel",
+        "spec": {
+          "data": { "kind": "QueryGroup", "spec": { "queries": [
+            { "kind": "PanelQuery", "spec": { "hidden": false, "query": { "datasource": { "name": "ds-prometheus-host-metrics" }, "group": "prometheus", "kind": "DataQuery",
+              "spec": { "editorMode": "code", "expr": "gl_journal_size", "format": "time_series", "legendFormat": "Journal size", "range": true }, "version": "v0" }, "refId": "A" } },
+            { "kind": "PanelQuery", "spec": { "hidden": false, "query": { "datasource": { "name": "ds-prometheus-host-metrics" }, "group": "prometheus", "kind": "DataQuery",
+              "spec": { "editorMode": "code", "expr": "gl_journal_size_limit", "format": "time_series", "legendFormat": "Journal limit", "range": true }, "version": "v0" }, "refId": "B" } }
+          ], "queryOptions": {}, "transformations": [] } },
+          "description": "On-disk journal size against its configured limit. Approaching the limit means Graylog will start applying back-pressure to inputs.",
+          "id": 3, "links": [], "title": "Journal Size vs Limit",
+          "vizConfig": { "group": "timeseries", "kind": "VizConfig", "spec": {
+            "fieldConfig": { "defaults": {
+              "color": { "mode": "palette-classic" },
+              "custom": { "axisBorderShow": false, "axisCenteredZero": false, "axisColorMode": "text", "axisLabel": "", "axisPlacement": "auto", "barAlignment": 0, "drawStyle": "line", "fillOpacity": 10, "gradientMode": "none", "hideFrom": { "legend": false, "tooltip": false, "viz": false }, "insertNulls": false, "lineInterpolation": "linear", "lineWidth": 1, "pointSize": 5, "scaleDistribution": { "type": "linear" }, "showPoints": "auto", "spanNulls": false, "stacking": { "group": "A", "mode": "none" }, "thresholdsStyle": { "mode": "off" } },
+              "mappings": [], "min": 0, "thresholds": { "mode": "absolute", "steps": [ { "color": "green", "value": null } ] }, "unit": "bytes" },
+              "overrides": [ { "matcher": { "id": "byName", "options": "Journal limit" }, "properties": [ { "id": "color", "value": { "fixedColor": "red", "mode": "fixed" } }, { "id": "custom.lineStyle", "value": { "dash": [10, 10], "fill": "dash" } } ] } ] },
+            "options": { "legend": { "calcs": ["lastNotNull", "max"], "displayMode": "table", "placement": "bottom", "showLegend": true }, "tooltip": { "hideZeros": false, "mode": "multi", "sort": "desc" } },
+            "version": "13.0.1+security-01" } }
+        }
+      },
+      "panel-2": {
+        "kind": "Panel",
+        "spec": {
+          "data": { "kind": "QueryGroup", "spec": { "queries": [
+            { "kind": "PanelQuery", "spec": { "hidden": false, "query": { "datasource": { "name": "ds-prometheus-host-metrics" }, "group": "prometheus", "kind": "DataQuery",
+              "spec": { "editorMode": "code", "expr": "gl_journal_utilization_ratio", "format": "time_series", "instant": true, "legendFormat": "journal", "range": false }, "version": "v0" }, "refId": "A" } }
+          ], "queryOptions": {}, "transformations": [] } },
+          "description": "Journal fill %. VERIFY SCALE: if the live value reads 0.0-1.0, switch unit to 'percentunit' and thresholds to 0.5 / 0.8.",
+          "id": 2, "links": [], "title": "Journal Utilization",
+          "vizConfig": { "group": "gauge", "kind": "VizConfig", "spec": {
+            "fieldConfig": { "defaults": {
+              "color": { "mode": "thresholds" }, "decimals": 1, "max": 100, "min": 0,
+              "thresholds": { "mode": "absolute", "steps": [ { "color": "green", "value": null }, { "color": "yellow", "value": 50 }, { "color": "red", "value": 80 } ] }, "unit": "percent" }, "overrides": [] },
+            "options": { "minVizHeight": 75, "minVizWidth": 75, "orientation": "auto", "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false }, "showThresholdLabels": false, "showThresholdMarkers": true },
+            "version": "13.0.1+security-01" } }
+        }
+      },
+      "panel-4": {
+        "kind": "Panel",
+        "spec": {
+          "data": { "kind": "QueryGroup", "spec": { "queries": [
+            { "kind": "PanelQuery", "spec": { "hidden": false, "query": { "datasource": { "name": "ds-prometheus-host-metrics" }, "group": "prometheus", "kind": "DataQuery",
+              "spec": { "editorMode": "code", "expr": "gl_journal_append_1_sec_rate", "format": "time_series", "legendFormat": "Append/s", "range": true }, "version": "v0" }, "refId": "A" } },
+            { "kind": "PanelQuery", "spec": { "hidden": false, "query": { "datasource": { "name": "ds-prometheus-host-metrics" }, "group": "prometheus", "kind": "DataQuery",
+              "spec": { "editorMode": "code", "expr": "gl_journal_read_1_sec_rate", "format": "time_series", "legendFormat": "Read/s", "range": true }, "version": "v0" }, "refId": "B" } }
+          ], "queryOptions": {}, "transformations": [] } },
+          "description": "Journal append (write-in) vs read (drain-out) rate. Append > Read sustained = the journal is filling. CONFIRM-LIVE: source names contain a dot; if these don't resolve, run `... | grep gl_journal_` to find the exact sanitized names.",
+          "id": 4, "links": [], "title": "Journal Append vs Read Rate",
+          "vizConfig": { "group": "timeseries", "kind": "VizConfig", "spec": {
+            "fieldConfig": { "defaults": {
+              "color": { "mode": "palette-classic" },
+              "custom": { "axisBorderShow": false, "axisCenteredZero": false, "axisColorMode": "text", "axisLabel": "", "axisPlacement": "auto", "barAlignment": 0, "drawStyle": "line", "fillOpacity": 10, "gradientMode": "none", "hideFrom": { "legend": false, "tooltip": false, "viz": false }, "insertNulls": false, "lineInterpolation": "linear", "lineWidth": 1, "pointSize": 5, "scaleDistribution": { "type": "linear" }, "showPoints": "auto", "spanNulls": false, "stacking": { "group": "A", "mode": "none" }, "thresholdsStyle": { "mode": "off" } },
+              "mappings": [], "min": 0, "thresholds": { "mode": "absolute", "steps": [ { "color": "green", "value": null } ] }, "unit": "short" }, "overrides": [] },
+            "options": { "legend": { "calcs": ["mean", "max"], "displayMode": "table", "placement": "bottom", "showLegend": true }, "tooltip": { "hideZeros": false, "mode": "multi", "sort": "desc" } },
+            "version": "13.0.1+security-01" } }
+        }
+      },
+      "panel-5": {
+        "kind": "Panel",
+        "spec": {
+          "data": { "kind": "QueryGroup", "spec": { "queries": [
+            { "kind": "PanelQuery", "spec": { "hidden": false, "query": { "datasource": { "name": "ds-prometheus-host-metrics" }, "group": "prometheus", "kind": "DataQuery",
+              "spec": { "editorMode": "code", "expr": "gl_journal_entries_uncommitted", "format": "time_series", "legendFormat": "Uncommitted", "range": true }, "version": "v0" }, "refId": "A" } }
+          ], "queryOptions": {}, "transformations": [] } },
+          "description": "Messages in the journal not yet written to OpenSearch. A sustained climb is the clearest backlog signal.",
+          "id": 5, "links": [], "title": "Uncommitted Journal Entries",
+          "vizConfig": { "group": "timeseries", "kind": "VizConfig", "spec": {
+            "fieldConfig": { "defaults": {
+              "color": { "mode": "palette-classic" },
+              "custom": { "axisBorderShow": false, "axisCenteredZero": false, "axisColorMode": "text", "axisLabel": "", "axisPlacement": "auto", "barAlignment": 0, "drawStyle": "line", "fillOpacity": 20, "gradientMode": "none", "hideFrom": { "legend": false, "tooltip": false, "viz": false }, "insertNulls": false, "lineInterpolation": "linear", "lineWidth": 1, "pointSize": 5, "scaleDistribution": { "type": "linear" }, "showPoints": "auto", "spanNulls": false, "stacking": { "group": "A", "mode": "none" }, "thresholdsStyle": { "mode": "off" } },
+              "mappings": [], "min": 0, "thresholds": { "mode": "absolute", "steps": [ { "color": "green", "value": null } ] }, "unit": "short" }, "overrides": [] },
+            "options": { "legend": { "calcs": ["lastNotNull", "max"], "displayMode": "table", "placement": "bottom", "showLegend": true }, "tooltip": { "hideZeros": false, "mode": "single", "sort": "none" } },
+            "version": "13.0.1+security-01" } }
+        }
+      },
+      "panel-6": {
+        "kind": "Panel",
+        "spec": {
+          "data": { "kind": "QueryGroup", "spec": { "queries": [
+            { "kind": "PanelQuery", "spec": { "hidden": false, "query": { "datasource": { "name": "ds-prometheus-host-metrics" }, "group": "prometheus", "kind": "DataQuery",
+              "spec": { "editorMode": "code", "expr": "gl_buffer_usage / gl_buffer_size * 100", "format": "time_series", "legendFormat": "{{type}}", "range": true }, "version": "v0" }, "refId": "A" } }
+          ], "queryOptions": {}, "transformations": [] } },
+          "description": "Input / process / output ring-buffer utilization. Process or output buffer pinned near 100% = OpenSearch (or pipeline processing) is the bottleneck.",
+          "id": 6, "links": [], "title": "Buffer Utilization %",
+          "vizConfig": { "group": "timeseries", "kind": "VizConfig", "spec": {
+            "fieldConfig": { "defaults": {
+              "color": { "mode": "palette-classic" },
+              "custom": { "axisBorderShow": false, "axisCenteredZero": false, "axisColorMode": "text", "axisLabel": "", "axisPlacement": "auto", "barAlignment": 0, "drawStyle": "line", "fillOpacity": 10, "gradientMode": "none", "hideFrom": { "legend": false, "tooltip": false, "viz": false }, "insertNulls": false, "lineInterpolation": "linear", "lineWidth": 1, "pointSize": 5, "scaleDistribution": { "type": "linear" }, "showPoints": "auto", "spanNulls": false, "stacking": { "group": "A", "mode": "none" }, "thresholdsStyle": { "mode": "line" } },
+              "mappings": [], "max": 100, "min": 0, "thresholds": { "mode": "absolute", "steps": [ { "color": "green", "value": null }, { "color": "orange", "value": 80 } ] }, "unit": "percent" }, "overrides": [] },
+            "options": { "legend": { "calcs": ["mean", "max", "lastNotNull"], "displayMode": "table", "placement": "bottom", "showLegend": true }, "tooltip": { "hideZeros": false, "mode": "multi", "sort": "desc" } },
+            "version": "13.0.1+security-01" } }
+        }
+      },
+      "panel-7": {
+        "kind": "Panel",
+        "spec": {
+          "data": { "kind": "QueryGroup", "spec": { "queries": [
+            { "kind": "PanelQuery", "spec": { "hidden": false, "query": { "datasource": { "name": "ds-prometheus-host-metrics" }, "group": "prometheus", "kind": "DataQuery",
+              "spec": { "editorMode": "code", "expr": "rate(gl_elasticsearch_output_writes[$__rate_interval])", "format": "time_series", "legendFormat": "Writes/s", "range": true }, "version": "v0" }, "refId": "A" } },
+            { "kind": "PanelQuery", "spec": { "hidden": false, "query": { "datasource": { "name": "ds-prometheus-host-metrics" }, "group": "prometheus", "kind": "DataQuery",
+              "spec": { "editorMode": "code", "expr": "rate(gl_elasticsearch_output_failures[$__rate_interval])", "format": "time_series", "legendFormat": "Failures/s", "range": true }, "version": "v0" }, "refId": "B" } }
+          ], "queryOptions": {}, "transformations": [] } },
+          "description": "Graylog -> OpenSearch output writes and failures. Failures > 0 means indexing errors (mapping conflicts, cluster blocked, etc.).",
+          "id": 7, "links": [], "title": "OpenSearch Output",
+          "vizConfig": { "group": "timeseries", "kind": "VizConfig", "spec": {
+            "fieldConfig": { "defaults": {
+              "color": { "mode": "palette-classic" },
+              "custom": { "axisBorderShow": false, "axisCenteredZero": false, "axisColorMode": "text", "axisLabel": "", "axisPlacement": "auto", "barAlignment": 0, "drawStyle": "line", "fillOpacity": 10, "gradientMode": "none", "hideFrom": { "legend": false, "tooltip": false, "viz": false }, "insertNulls": false, "lineInterpolation": "linear", "lineWidth": 1, "pointSize": 5, "scaleDistribution": { "type": "linear" }, "showPoints": "auto", "spanNulls": false, "stacking": { "group": "A", "mode": "none" }, "thresholdsStyle": { "mode": "off" } },
+              "mappings": [], "min": 0, "thresholds": { "mode": "absolute", "steps": [ { "color": "green", "value": null } ] }, "unit": "short" },
+              "overrides": [ { "matcher": { "id": "byName", "options": "Failures/s" }, "properties": [ { "id": "color", "value": { "fixedColor": "red", "mode": "fixed" } } ] } ] },
+            "options": { "legend": { "calcs": ["mean", "max"], "displayMode": "table", "placement": "bottom", "showLegend": true }, "tooltip": { "hideZeros": false, "mode": "multi", "sort": "desc" } },
+            "version": "13.0.1+security-01" } }
+        }
+      },
+      "panel-8": {
+        "kind": "Panel",
+        "spec": {
+          "data": { "kind": "QueryGroup", "spec": { "queries": [
+            { "kind": "PanelQuery", "spec": { "hidden": false, "query": { "datasource": { "name": "ds-prometheus-host-metrics" }, "group": "prometheus", "kind": "DataQuery",
+              "spec": { "editorMode": "code", "expr": "rate(gl_stream_incoming_messages[$__rate_interval])", "format": "time_series", "legendFormat": "{{stream}}", "range": true }, "version": "v0" }, "refId": "A" } }
+          ], "queryOptions": {}, "transformations": [] } },
+          "description": "Incoming message rate per stream. NOTE: the 'stream' label is the Graylog stream ID, not its title. Map IDs to names via GET /api/streams, or add value mappings / legend overrides.",
+          "id": 8, "links": [], "title": "Per-Stream Incoming Rate",
+          "vizConfig": { "group": "timeseries", "kind": "VizConfig", "spec": {
+            "fieldConfig": { "defaults": {
+              "color": { "mode": "palette-classic" },
+              "custom": { "axisBorderShow": false, "axisCenteredZero": false, "axisColorMode": "text", "axisLabel": "", "axisPlacement": "auto", "barAlignment": 0, "drawStyle": "line", "fillOpacity": 10, "gradientMode": "none", "hideFrom": { "legend": false, "tooltip": false, "viz": false }, "insertNulls": false, "lineInterpolation": "linear", "lineWidth": 1, "pointSize": 5, "scaleDistribution": { "type": "linear" }, "showPoints": "auto", "spanNulls": false, "stacking": { "group": "A", "mode": "none" }, "thresholdsStyle": { "mode": "off" } },
+              "mappings": [], "min": 0, "thresholds": { "mode": "absolute", "steps": [ { "color": "green", "value": null } ] }, "unit": "short" }, "overrides": [] },
+            "options": { "legend": { "calcs": ["mean", "lastNotNull"], "displayMode": "table", "placement": "bottom", "showLegend": true }, "tooltip": { "hideZeros": false, "mode": "multi", "sort": "desc" } },
+            "version": "13.0.1+security-01" } }
+        }
+      },
+      "panel-9": {
+        "kind": "Panel",
+        "spec": {
+          "data": { "kind": "QueryGroup", "spec": { "queries": [
+            { "kind": "PanelQuery", "spec": { "hidden": false, "query": { "datasource": { "name": "ds-prometheus-host-metrics" }, "group": "prometheus", "kind": "DataQuery",
+              "spec": { "editorMode": "code", "expr": "rate(gl_indexer_message_invalid_timestamps[$__rate_interval])", "format": "time_series", "legendFormat": "Invalid timestamps/s", "range": true }, "version": "v0" }, "refId": "A" } }
+          ], "queryOptions": {}, "transformations": [] } },
+          "description": "Rate of messages with unparseable/invalid timestamps. Non-zero points at a parsing problem for one of the sources.",
+          "id": 9, "links": [], "title": "Invalid Timestamps",
+          "vizConfig": { "group": "timeseries", "kind": "VizConfig", "spec": {
+            "fieldConfig": { "defaults": {
+              "color": { "mode": "thresholds" },
+              "custom": { "axisBorderShow": false, "axisCenteredZero": false, "axisColorMode": "text", "axisLabel": "", "axisPlacement": "auto", "barAlignment": 0, "drawStyle": "line", "fillOpacity": 20, "gradientMode": "none", "hideFrom": { "legend": false, "tooltip": false, "viz": false }, "insertNulls": false, "lineInterpolation": "linear", "lineWidth": 1, "pointSize": 5, "scaleDistribution": { "type": "linear" }, "showPoints": "auto", "spanNulls": false, "stacking": { "group": "A", "mode": "none" }, "thresholdsStyle": { "mode": "off" } },
+              "mappings": [], "min": 0, "thresholds": { "mode": "absolute", "steps": [ { "color": "green", "value": null }, { "color": "red", "value": 0.001 } ] }, "unit": "short" }, "overrides": [] },
+            "options": { "legend": { "calcs": ["max", "lastNotNull"], "displayMode": "table", "placement": "bottom", "showLegend": true }, "tooltip": { "hideZeros": false, "mode": "single", "sort": "none" } },
+            "version": "13.0.1+security-01" } }
+        }
+      }
+    },
+    "layout": {
+      "kind": "RowsLayout",
+      "spec": {
+        "rows": [
+          {
+            "kind": "RowsLayoutRow",
+            "spec": { "collapse": false, "title": "Throughput & Journal",
+              "layout": { "kind": "GridLayout", "spec": { "items": [
+                { "kind": "GridLayoutItem", "spec": { "element": { "kind": "ElementReference", "name": "panel-1" }, "height": 8, "width": 12, "x": 0, "y": 0 } },
+                { "kind": "GridLayoutItem", "spec": { "element": { "kind": "ElementReference", "name": "panel-3" }, "height": 8, "width": 12, "x": 12, "y": 0 } }
+              ] } } }
+          },
+          {
+            "kind": "RowsLayoutRow",
+            "spec": { "collapse": false, "title": "Journal Dynamics",
+              "layout": { "kind": "GridLayout", "spec": { "items": [
+                { "kind": "GridLayoutItem", "spec": { "element": { "kind": "ElementReference", "name": "panel-2" }, "height": 8, "width": 6, "x": 0, "y": 0 } },
+                { "kind": "GridLayoutItem", "spec": { "element": { "kind": "ElementReference", "name": "panel-4" }, "height": 8, "width": 9, "x": 6, "y": 0 } },
+                { "kind": "GridLayoutItem", "spec": { "element": { "kind": "ElementReference", "name": "panel-5" }, "height": 8, "width": 9, "x": 15, "y": 0 } }
+              ] } } }
+          },
+          {
+            "kind": "RowsLayoutRow",
+            "spec": { "collapse": false, "title": "Buffers",
+              "layout": { "kind": "GridLayout", "spec": { "items": [
+                { "kind": "GridLayoutItem", "spec": { "element": { "kind": "ElementReference", "name": "panel-6" }, "height": 8, "width": 24, "x": 0, "y": 0 } }
+              ] } } }
+          },
+          {
+            "kind": "RowsLayoutRow",
+            "spec": { "collapse": false, "title": "Output & Streams",
+              "layout": { "kind": "GridLayout", "spec": { "items": [
+                { "kind": "GridLayoutItem", "spec": { "element": { "kind": "ElementReference", "name": "panel-7" }, "height": 8, "width": 8, "x": 0, "y": 0 } },
+                { "kind": "GridLayoutItem", "spec": { "element": { "kind": "ElementReference", "name": "panel-8" }, "height": 8, "width": 8, "x": 8, "y": 0 } },
+                { "kind": "GridLayoutItem", "spec": { "element": { "kind": "ElementReference", "name": "panel-9" }, "height": 8, "width": 8, "x": 16, "y": 0 } }
+              ] } } }
+          }
+        ]
+      }
+    },
+    "links": [],
+    "liveNow": false,
+    "preferences": { "layout": { "kind": "GridLayout", "spec": { "items": [] } } },
+    "preload": false,
+    "tags": ["tasco", "logserver", "graylog"],
+    "timeSettings": { "autoRefresh": "1m", "autoRefreshIntervals": ["5s", "10s", "30s", "1m", "5m", "15m", "30m", "1h", "2h", "1d"], "fiscalYearStartMonth": 0, "from": "now-24h", "hideTimepicker": false, "timezone": "browser", "to": "now" },
+    "title": "Graylog Ingestion & Pipeline",
+    "variables": []
+  }
+}

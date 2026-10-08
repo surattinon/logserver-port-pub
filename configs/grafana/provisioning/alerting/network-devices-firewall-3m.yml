@@ -1,0 +1,117 @@
+apiVersion: 1
+groups:
+  - orgId: 1
+    name: firewall-3m
+    folder: Network Devices
+    interval: 3m
+    rules:
+      - uid: dfo78t4nlpmo0f
+        title: firewall-log-feed-dead
+        condition: C
+        data:
+          - refId: A
+            queryType: lucene
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: ds-graylog-opensearch
+            model:
+              alias: ""
+              bucketAggs:
+                - id: "2"
+                  settings:
+                    filters:
+                      - label: Palo Alto Firewall - HO
+                        query: source:"pa-3220"
+                      - label: WatchGuard XTM - HO
+                        query: source:"tipco_asphalt_m590"
+                  type: filters
+                - field: timestamp
+                  id: "3"
+                  settings:
+                    interval: 1m
+                    min_doc_count: "0"
+                    trimEdges: "0"
+                  type: date_histogram
+              datasource:
+                type: grafana-opensearch-datasource
+                uid: ds-graylog-opensearch
+              format: table
+              intervalMs: 60000
+              luceneQueryType: Metric
+              maxDataPoints: 43200
+              metrics:
+                - id: "1"
+                  type: count
+              query: ""
+              queryType: lucene
+              refId: A
+              timeField: timestamp
+          - refId: B
+            queryType: expression
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params: []
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: []
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: A
+              intervalMs: 1000
+              maxDataPoints: 43200
+              reducer: sum
+              refId: B
+              settings:
+                mode: replaceNN
+                replaceWithValue: 0
+              type: reduce
+          - refId: C
+            queryType: expression
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 1
+                    type: lt
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - C
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: B
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: C
+              type: threshold
+        noDataState: Alerting
+        execErrState: KeepLast
+        for: 3m
+        keepFiringFor: 2m
+        annotations:
+          summary: Log feed appears dead - 0 logs message received in last 5 minutes. Check firewall device state/connection.
+        labels:
+          alert_type: health.log_gap
+          category: health
+          device_alias: '{{ $$labels.filter }}'
+          severity: critical
+        isPaused: false
+        notification_settings:
+          receiver: firewall-critical-channel

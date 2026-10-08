@@ -1,0 +1,19 @@
+# Centralized Log Server - scheduled jobs
+# Managed via git. Do not edit /etc/cron.d/tasco-logserver directly.
+
+SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+### Tasco Log server Production cronjobs ###
+
+# Update SM policy snapshots last 7 days of indices daily @ 01:30AM
+30 1 * * * svc-logserver  /opt/tasco-logserver/scripts/run-job.sh update-snapshot-scope /opt/tasco-logserver/scripts/update-snapshot-scope.sh
+
+# Mongodump daily @ 02:00 AM
+0 2 * * *  svc-logserver  /opt/tasco-logserver/scripts/run-job.sh mongodump /opt/tasco-logserver/scripts/mongodump.sh prod
+
+# Git auto-commit daily @ 02:30 AM
+30 2 * * * svc-logserver  /opt/tasco-logserver/scripts/run-job.sh git-autocommit /opt/tasco-logserver/scripts/git-autocommit.sh
+
+# Check docker status
+* * * * *  svc-logserver  /opt/tasco-logserver/scripts/docker-status.sh

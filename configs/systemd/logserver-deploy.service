@@ -1,0 +1,14 @@
+[Unit]
+Description=tasco-logserver pull-based GitOps deploy
+After=network-online.target docker.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=svc-logserver
+Group=logserver-dev
+WorkingDirectory=/opt/tasco-logserver
+Environment=HOME=/var/lib/svc-logserver
+Environment=ENV=prod
+Environment=AUTO_APPLY_DISRUPTIVE=0
+ExecStart=/opt/tasco-logserver/scripts/deploy.sh

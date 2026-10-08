@@ -1,0 +1,24 @@
+apiVersion: 1
+policies:
+  - orgId: 1
+    receiver: empty
+    group_by:
+      - grafana_folder
+      - alertname
+    routes:
+      - receiver: firewall-critical-channel
+        object_matchers:
+          - - severity
+            - =
+            - critical
+  - orgId: 1
+    receiver: empty
+    group_by:
+      - grafana_folder
+      - alertname
+    routes:
+      - receiver: firewall-warning-channel
+        object_matchers:
+          - - severity
+            - =
+            - warning

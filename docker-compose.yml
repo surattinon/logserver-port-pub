@@ -1,0 +1,4 @@
+networks:
+  logserver_net:
+    driver: bridge
+    name: "logserver_net_${ENV}"

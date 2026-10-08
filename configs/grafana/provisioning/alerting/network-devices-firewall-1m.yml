@@ -1,0 +1,533 @@
+apiVersion: 1
+groups:
+  - orgId: 1
+    name: firewall-1m
+    folder: Network Devices
+    interval: 1m
+    rules:
+      - uid: firewall-deny-spike
+        title: firewall-deny-spike
+        condition: E
+        data:
+          - refId: A
+            queryType: lucene
+            relativeTimeRange:
+              from: 600
+              to: 0
+            datasourceUid: ds-graylog-opensearch
+            model:
+              alias: total
+              bucketAggs:
+                - field: source
+                  id: "7"
+                  settings:
+                    min_doc_count: "1"
+                    order: desc
+                    orderBy: _term
+                    size: "10"
+                  type: terms
+                - field: device_alias
+                  id: "5"
+                  settings:
+                    min_doc_count: "1"
+                    order: desc
+                    orderBy: _term
+                    size: "10"
+                - field: timestamp
+                  id: "6"
+                  settings:
+                    interval: 1m
+                    min_doc_count: "0"
+                    trimEdges: "0"
+                  type: date_histogram
+              datasource:
+                type: grafana-opensearch-datasource
+                uid: ds-graylog-opensearch
+              format: table
+              intervalMs: 1000
+              luceneQueryType: Metric
+              maxDataPoints: 43200
+              metrics:
+                - id: "1"
+                  type: count
+              query: device_vendor:(PaloAlto OR WatchGuard)
+              queryType: lucene
+              refId: A
+              timeField: timestamp
+          - refId: B
+            queryType: lucene
+            relativeTimeRange:
+              from: 600
+              to: 0
+            datasourceUid: ds-graylog-opensearch
+            model:
+              alias: denied
+              bucketAggs:
+                - field: source
+                  id: "4"
+                  settings:
+                    min_doc_count: "1"
+                    order: desc
+                    orderBy: _term
+                    size: "10"
+                  type: terms
+                - field: device_alias
+                  id: "5"
+                  settings:
+                    min_doc_count: "1"
+                    order: desc
+                    orderBy: _term
+                    size: "10"
+                - field: timestamp
+                  id: "3"
+                  settings:
+                    interval: 1m
+                    min_doc_count: "0"
+                    trimEdges: "0"
+                  type: date_histogram
+              datasource:
+                type: grafana-opensearch-datasource
+                uid: ds-graylog-opensearch
+              format: table
+              intervalMs: 1000
+              luceneQueryType: Metric
+              maxDataPoints: 43200
+              metrics:
+                - id: "1"
+                  type: count
+              query: 'action: (deny OR drop)'
+              queryType: lucene
+              refId: B
+              timeField: timestamp
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 0
+                      - 0
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: []
+                  reducer:
+                    params: []
+                    type: avg
+                  type: query
+              datasource:
+                name: Expression
+                type: __expr__
+                uid: __expr__
+              expression: $B / $A * 100
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: C
+              type: math
+          - refId: D
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 0
+                      - 0
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: []
+                  reducer:
+                    params: []
+                    type: avg
+                  type: query
+              datasource:
+                name: Expression
+                type: __expr__
+                uid: __expr__
+              expression: C
+              intervalMs: 1000
+              maxDataPoints: 43200
+              reducer: mean
+              refId: D
+              settings:
+                mode: replaceNN
+                replaceWithValue: 0
+              type: reduce
+          - refId: E
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 60
+                      - 0
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: []
+                  reducer:
+                    params: []
+                    type: avg
+                  type: query
+              datasource:
+                name: Expression
+                type: __expr__
+                uid: __expr__
+              expression: D
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: E
+              type: threshold
+        noDataState: OK
+        execErrState: OK
+        for: 1m
+        keepFiringFor: 2m
+        annotations:
+          summary: Deny rate exceeded {{ printf "%.2f" $values.D.Value }}%
+        labels:
+          alert_type: deny.spike
+          category: deny
+          severity: warning
+        isPaused: false
+        notification_settings:
+          receiver: firewall-warning-channel
+      - uid: palo-threat-critical
+        title: palo-threat-critical
+        condition: D
+        data:
+          - refId: B
+            queryType: lucene
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: ds-graylog-opensearch
+            model:
+              alias: critical_threats
+              bucketAggs:
+                - field: device_alias
+                  id: "3"
+                  settings:
+                    min_doc_count: "1"
+                    order: desc
+                    orderBy: _term
+                    size: "10"
+                  type: terms
+                - field: timestamp
+                  id: "2"
+                  settings:
+                    interval: 1m
+                  type: date_histogram
+              datasource:
+                type: grafana-opensearch-datasource
+                uid: ds-graylog-opensearch
+              format: table
+              intervalMs: 1000
+              luceneQueryType: Metric
+              maxDataPoints: 43200
+              metrics:
+                - id: "1"
+                  type: count
+              query: 'device_vendor: PaloAlto AND log_type: THREAT AND severity: critical'
+              queryType: lucene
+              refId: B
+              timeField: timestamp
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 0
+                      - 0
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: []
+                  reducer:
+                    params: []
+                    type: avg
+                  type: query
+              datasource:
+                name: Expression
+                type: __expr__
+                uid: __expr__
+              expression: B
+              intervalMs: 1000
+              maxDataPoints: 43200
+              reducer: max
+              refId: C
+              settings:
+                mode: replaceNN
+                replaceWithValue: 0
+              type: reduce
+          - refId: D
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 0
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: []
+                  reducer:
+                    params: []
+                    type: avg
+                  type: query
+              datasource:
+                name: Expression
+                type: __expr__
+                uid: __expr__
+              expression: C
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: D
+              type: threshold
+        noDataState: OK
+        execErrState: OK
+        annotations:
+          summary: '{{ $values.C.Value }} critical threat detected on {{ $labels.device_alias }}'
+        labels:
+          alert_type: threat.critical
+          category: threat
+          severity: critical
+        isPaused: false
+        notification_settings:
+          receiver: firewall-critical-channel
+      - uid: wg-threat-critical
+        title: wg-threat-critical
+        condition: D
+        data:
+          - refId: B
+            queryType: lucene
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: ds-graylog-opensearch
+            model:
+              alias: crit_logs
+              bucketAggs:
+                - field: device_alias
+                  id: "3"
+                  settings:
+                    min_doc_count: "1"
+                    order: desc
+                    orderBy: _term
+                    size: "10"
+                  type: terms
+                - field: timestamp
+                  id: "2"
+                  settings:
+                    interval: 1m
+                  type: date_histogram
+              datasource:
+                type: grafana-opensearch-datasource
+                uid: ds-graylog-opensearch
+              format: table
+              intervalMs: 1000
+              luceneQueryType: Metric
+              maxDataPoints: 43200
+              metrics:
+                - id: "1"
+                  type: count
+              query: device_vendor:WatchGuard AND msg:("IPS match" OR "APT threat detected" OR "GAV Virus found" OR "DDOS" OR "botnet")
+              queryType: lucene
+              refId: B
+              timeField: timestamp
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 0
+                      - 0
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: []
+                  reducer:
+                    params: []
+                    type: avg
+                  type: query
+              datasource:
+                name: Expression
+                type: __expr__
+                uid: __expr__
+              expression: B
+              intervalMs: 1000
+              maxDataPoints: 43200
+              reducer: max
+              refId: C
+              settings:
+                mode: replaceNN
+                replaceWithValue: 0
+              type: reduce
+          - refId: D
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 0
+                      - 0
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: []
+                  reducer:
+                    params: []
+                    type: avg
+                  type: query
+              datasource:
+                name: Expression
+                type: __expr__
+                uid: __expr__
+              expression: C
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: D
+              type: threshold
+        noDataState: OK
+        execErrState: OK
+        annotations:
+          summary: '{{ $values.C.Value }} critical threat detected on {{ $labels.device_alias }}'
+        labels:
+          alert_type: threat.critical
+          category: threat
+          severity: critical
+        isPaused: false
+        notification_settings:
+          receiver: firewall-critical-channel
+      - uid: firewall-deny-repeat
+        title: firewall-deny-repeat
+        condition: C
+        data:
+          - refId: A
+            queryType: lucene
+            relativeTimeRange:
+              from: 60
+              to: 0
+            datasourceUid: ds-graylog-opensearch
+            model:
+              alias: deny_src_ip
+              bucketAggs:
+                - field: src_ip
+                  id: "3"
+                  settings:
+                    min_doc_count: "200"
+                    order: desc
+                    orderBy: "1"
+                    size: "20"
+                  type: terms
+                - field: device_alias
+                  id: "4"
+                  settings:
+                    min_doc_count: "1"
+                    order: desc
+                    orderBy: _term
+                    size: "10"
+                  type: terms
+                - field: source
+                  id: "6"
+                  settings:
+                    min_doc_count: "1"
+                    order: desc
+                    orderBy: _term
+                    size: "10"
+                  type: terms
+                - field: timestamp
+                  id: "5"
+                  settings:
+                    interval: 1m
+                    min_doc_count: "0"
+                    trimEdges: "0"
+                  type: date_histogram
+              datasource:
+                type: grafana-opensearch-datasource
+                uid: ds-graylog-opensearch
+              format: table
+              intervalMs: 1000
+              luceneQueryType: Metric
+              maxDataPoints: 43200
+              metrics:
+                - id: "1"
+                  type: count
+              query: '(action:(deny OR drop)) AND src_ip: *'
+              queryType: lucene
+              refId: A
+              timeField: timestamp
+          - refId: B
+            queryType: expression
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params: []
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: []
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: A
+              intervalMs: 1000
+              maxDataPoints: 43200
+              reducer: sum
+              refId: B
+              settings:
+                mode: replaceNN
+                replaceWithValue: 0
+              type: reduce
+          - refId: C
+            queryType: expression
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 200
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - C
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: B
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: C
+              type: threshold
+        noDataState: OK
+        execErrState: OK
+        annotations:
+          runbook_url: http://176.16.1.20:3000/d/network-devices-details/firewall-detail-dashboard?var-hostname={{ $labels.source }}&dtab=denied-traffic&from=now-1h&to=now&timezone=browser&orgId=1
+          summary: Got {{ $values.B.Value }} deny hits in last 1 minute.
+        labels:
+          category: deny
+          alert_type: deny.repeated
+          severity: critical
+        isPaused: false
+        notification_settings:
+          receiver: firewall-critical-channel

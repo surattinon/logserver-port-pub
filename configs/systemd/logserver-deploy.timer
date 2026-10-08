@@ -1,0 +1,10 @@
+[Unit]
+Description=Poll origin/main and deploy tasco-logserver every 5 min
+
+[Timer]
+OnBootSec=3min
+OnUnitActiveSec=5min
+Persistent=true
+
+[Install]
+WantedBy=timers.target

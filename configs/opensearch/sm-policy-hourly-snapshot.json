@@ -1,0 +1,22 @@
+{
+  "description": "Hourly automated snapshot - pan_os_logs and watchguard_logs. Seed policy; live index scope is narrowed to the last 7 days by scripts/update-snapshot-scope.sh.",
+  "creation": {
+    "schedule": {
+      "cron": { "expression": "0 * * * *", "timezone": "Asia/Bangkok" }
+    },
+    "time_limit": "45m"
+  },
+  "deletion": {
+    "condition": {
+      "max_age": "7d",
+      "max_count": 168,
+      "min_count": 24
+    }
+  },
+  "snapshot_config": {
+    "repository": "local-snapshots",
+    "indices": "pan_os_logs_*,watchguard_logs_*",
+    "ignore_unavailable": "true",
+    "include_global_state": "false"
+  }
+}
