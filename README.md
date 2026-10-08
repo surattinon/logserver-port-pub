@@ -182,7 +182,7 @@ ______________________________________________________________________
 
 Firewall devices at Bangkok HO forward syslog over UDP/514 to Graylog. Graylog receives, routes, and parses the logs, then writes them to OpenSearch. Grafana reads OpenSearch (log data) and Prometheus (host/service metrics) for dashboards and alert evaluation, and delivers alerts to Microsoft Teams.
 
-![HL-log-arch](./assets/hl-logserver-arch.png)
+![HL-log-arch](./assets/hl-tascologserver-arch.png)
 
 ### Component Summary
 
