@@ -13,27 +13,14 @@
 | App Root | `/opt/logserver` |
 | Timezone | Asia/Bangkok (ICT, UTC+7) |
 
-Firewall devices at Bangkok HO forward syslog over UDP/514 to Graylog. Graylog parses and routes logs to OpenSearch. Grafana reads OpenSearch and Prometheus for dashboards and alerts, delivering notifications to Microsoft Teams. Deployment is GitOps: a service account pulls from a private Git repository and applies changes to production.
+
+A centralized log server solution for production environments, integratingGraylog, OpenSearch, MongoDB, Grafana, and Prometheus via Docker Compose, managed with Makefile. Itcollects and processes syslog data from firewall devices, parses and routes logs through Graylog,indexes with OpenSearch, and visualizes and alerts via Grafana and Teams. The deployment follows GitOpspractices, supports custom pipelines and lookup tables for distinct log sources (Palo Alto andWatchGuard), and delivers a fully automated stack for scalable, auditable log management and monitoring.
 
 **Stack:** Graylog 7.1.0 · OpenSearch 2.19.5 · MongoDB 7.0 · Grafana 13.0.1+security-01 · Prometheus v3.11.3 · Node Exporter v1.11.1 — all Docker Compose, managed via `Makefile`.
 
-**Log sources (current scope — 2 sources):** Palo Alto PA-3220 (`192.168.1.X`) and WatchGuard HQ (`192.168.1.X`). A WatchGuard PPD device is referenced in earlier planning material but is **out of scope** for this deployment and is not wired into any stream, pipeline, or index set.
-
-______________________________________________________________________
-
-# Centralized Log Server — Architecture Overview
-
-| Field | Value |
-| ------------------ | -------------------------------- |
-| **Project** | Centralized Log Server |
-| **Environment** | Production |
-| **Hostname** | logserver-prod |
-| **Platform** | Nutanix AHV — Ubuntu 24.04 LTS |
-| **App Root** | `/opt/logserver` |
-| **Timezone** | Asia/Bangkok (ICT, UTC+7) |
-| **Author** | Author |
-| **Version** | 2.0 |
-| **Classification** | CONFIDENTIAL — Internal Use Only |
+**Log sources (current scope — 2 sources):** 
+- Palo Alto
+- WatchGuard Firebox
 
 ______________________________________________________________________
 
